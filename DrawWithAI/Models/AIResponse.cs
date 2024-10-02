@@ -1,8 +1,12 @@
 ﻿using System;
 
-public class Class1
+namespace DrawWithAI.Models
 {
-	public Class1()
-	{
-	}
+    public class AIResponse
+    {
+        public string Status { get; set; }
+        public string ImageUrl { get; set; }
+        public string Message { get; set; }
+    }
 }
+

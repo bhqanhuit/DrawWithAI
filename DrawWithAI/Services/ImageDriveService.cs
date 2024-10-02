@@ -1,8 +1,12 @@
 ﻿using System;
 
-public class ImageDriveService
+namespace DrawWithAI.Services
 {
-	public Class1()
-	{
-	}
+    public class ImageDriveService
+    {
+        public ImageDriveService()
+        {
+        }
+    }
 }
+

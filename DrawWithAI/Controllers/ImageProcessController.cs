@@ -1,8 +1,5 @@
-﻿using System;
-
-public class Class1
+﻿namespace DrawApi.Controllers
 {
-	public Class1()
-	{
-	}
+
 }
+
