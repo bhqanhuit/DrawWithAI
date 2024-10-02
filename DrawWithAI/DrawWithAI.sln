@@ -5,8 +5,6 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawApi", "DrawApi.csproj", "{D16556B9-CD1F-4CFE-8F56-C02128878A25}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "DrawClient", "..\vueproject1\DrawClient.esproj", "{4AF75000-F315-46A1-B92B-2F3C7062CAA8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawClientMaui", "..\DrawClientMaui\DrawClientMaui.csproj", "{39CB4AB0-9F34-48A8-90AD-D2D50E65079E}"
 EndProject
 Global
@@ -19,12 +17,6 @@ Global
 		{D16556B9-CD1F-4CFE-8F56-C02128878A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D16556B9-CD1F-4CFE-8F56-C02128878A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D16556B9-CD1F-4CFE-8F56-C02128878A25}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4AF75000-F315-46A1-B92B-2F3C7062CAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4AF75000-F315-46A1-B92B-2F3C7062CAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4AF75000-F315-46A1-B92B-2F3C7062CAA8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{4AF75000-F315-46A1-B92B-2F3C7062CAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4AF75000-F315-46A1-B92B-2F3C7062CAA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4AF75000-F315-46A1-B92B-2F3C7062CAA8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{39CB4AB0-9F34-48A8-90AD-D2D50E65079E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39CB4AB0-9F34-48A8-90AD-D2D50E65079E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39CB4AB0-9F34-48A8-90AD-D2D50E65079E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
