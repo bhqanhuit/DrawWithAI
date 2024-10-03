@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <Content Include="..\Images\**\*">
+	    <Link>Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
