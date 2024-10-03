@@ -1,6 +1,0 @@
-@DrawWithAI_HostAddress = http://localhost:5160
-
-GET {{DrawWithAI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawApi", "DrawApi.csproj", "{D16556B9-CD1F-4CFE-8F56-C02128878A25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawClientMaui", "..\DrawClientMaui\DrawClientMaui.csproj", "{39CB4AB0-9F34-48A8-90AD-D2D50E65079E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawClientMaui", "..\DrawClientMaui\DrawClientMaui.csproj", "{39CB4AB0-9F34-48A8-90AD-D2D50E65079E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

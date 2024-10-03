@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace DrawWithAI.Models
+namespace DrawWithAI.DrawApi.Models
 {
     public class AIResponse
     {
         public string Status { get; set; }
-        public string ImageUrl { get; set; }
+        public string NamePath { get; set; }
         public string Message { get; set; }
     }
 }

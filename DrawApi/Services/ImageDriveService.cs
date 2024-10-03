@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DrawWithAI.Services
+﻿namespace DrawWithAI.DrawApi.Services
 {
     public class ImageDriveService
     {
