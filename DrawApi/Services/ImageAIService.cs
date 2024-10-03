@@ -22,22 +22,7 @@ namespace DrawWithAI.DrawApi.Services
 
         public async Task<AIResponse> GetImageFromAI(string imageUrl, string textPrompt)
         {
-            var request = new RequestToAI();
-            request.Name = imageUrl;
-            request.Prompt = textPrompt;
-            request.Id = 10;
-            var content = new MultipartFormDataContent();
-            await Task.Delay(1000);
-            Console.WriteLine("Requesting AI for Image");
-            Console.WriteLine(request.ToString());
-
-
-            return new AIResponse
-            {
-                Status = "Success",
-                ImageUrl = "https://www.google.com",
-                Message = "Image from AI"
-            };
+            
         }
     }
 }
