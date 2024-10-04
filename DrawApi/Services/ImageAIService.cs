@@ -15,14 +15,15 @@ namespace DrawWithAI.DrawApi.Services
             _imageDriveService = imageDriveService;
         }
 
-        public string ExtractImageFromResponse(AIResponse response)
-        {
-            return "Extracted Image from Response";
-        }
 
-        public async Task<AIResponse> GetImageFromAI(string imageUrl, string textPrompt)
+        public string GetImageFromAI(string namePath, string prompt)
         {
-            
+            // Form AI Request (include namePath and prompt)
+            // Send Request to AI
+            // Get Response from AI
+            // Extract namePath from Response
+            string resultNamePath = "test.png";
+            return resultNamePath;
         }
     }
 }

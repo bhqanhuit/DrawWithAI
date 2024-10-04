@@ -1,6 +1,6 @@
 using System;
 
-namespace DrawWithAI.DrawAPI.Models
+namespace DrawWithAI.DrawApi.Models
 {
     public class ImageProcessRequest
     {
