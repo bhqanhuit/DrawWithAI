@@ -16,7 +16,7 @@ namespace DrawApi.Controllers
         private readonly ImageDriveService _imageDriveService = imageDriveService;
 
         [HttpPost]
-        public IActionResult Post([FromBody] ImageProcessRequest request)
+        public async Task<IActionResult> Post([FromBody] ImageProcessRequest request)
         {
             // Get the image from the request.ImagePath (on local)
             // Call ImageDriveService.UploadImage (request.ImagePath) to upload the image to drive service --> get the namePath (on Drive)
@@ -31,7 +31,7 @@ namespace DrawApi.Controllers
             string driveNamePath = imageDriveService.UploadImage(imagePath);
 
             Console.WriteLine("Get the image from AI...");
-            string resultDriveNamePath = imageAiService.GetImageFromAI(driveNamePath, request.Prompt);
+            string resultDriveNamePath = await imageAiService.GetImageFromAIAsync(driveNamePath, request.Prompt);
             Console.WriteLine("Download the images from drive...");
             string resultImagePath = imageDriveService.DownloadImage(resultDriveNamePath, imageFolder);
             

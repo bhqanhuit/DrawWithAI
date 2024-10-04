@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System;
 using System.Text;
+using DrawWithAI.DrawApi.Models;
+
 namespace DrawWithAI.Controllers
 {
     [ApiController]
@@ -40,21 +42,38 @@ namespace DrawWithAI.Controllers
             {
                 Console.WriteLine("test.txt already exists.");
             }
+
             using (StreamWriter sw = System.IO.File.CreateText(testFilePath))
             {
                 sw.WriteLine("Hello Worewrewrwrwrewrewrerwerwerwerewrewrewrwerrwrwerwewwrwerwerwerwerwerewrwerld");
             }
+
             // Read and display the content of test.txt
             string content = System.IO.File.ReadAllText(testFilePath);
             Console.WriteLine("Content of test.txt: " + content);
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+                {
+                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                    TemperatureC = Random.Shared.Next(-20, 55),
+                    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                })
+                .ToArray();
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] RequestToAI request)
+        {
+
+
+            AIResponse response = new AIResponse()
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                NamePath = "hello.txt",
+                Status = "Success",
+                Message = "Image Processed Successfully"
+            };
+            // Return the processed image
+            return Ok(response);
         }
     }
 }

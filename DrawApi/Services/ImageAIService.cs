@@ -4,27 +4,38 @@ using DrawWithAI.DrawApi.Services;
 
 namespace DrawWithAI.DrawApi.Services
 {
+    
     public class ImageAIService
     {
+        public readonly string AI_URI = "http://localhost:5160/weatherforecast";
         private readonly HttpClient _httpClient;
-        private readonly ImageDriveService _imageDriveService;
 
-        public ImageAIService(HttpClient httpClient, ImageDriveService imageDriveService)
+        public ImageAIService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _imageDriveService = imageDriveService;
         }
 
-
-        public string GetImageFromAI(string namePath, string prompt)
+        public async Task<String> GetImageFromAIAsync(string namePath, string prompt)
         {
-            // Form AI Request (include namePath and prompt)
+            // Form AI Request
+            RequestToAI aiRequest = new RequestToAI()
+            {
+                NamePath = namePath,
+                Prompt = prompt
+            };
+
             // Send Request to AI
-            // Get Response from AI
+            AIResponse aiResponse = await _httpClient.PostAsJsonAsync(AI_URI, aiRequest)
+                .Result.Content.ReadFromJsonAsync<AIResponse>();
+            
             // Extract namePath from Response
-            string resultNamePath = "test.png";
-            return resultNamePath;
+            if (aiResponse != null && !string.IsNullOrEmpty(aiResponse.NamePath))
+            {
+                // Assuming the ImageUrl is the path to the result image
+                return aiResponse.NamePath;
+            }
+
+            throw new Exception("Failed to get a valid response from AI service.");
         }
     }
 }
-
