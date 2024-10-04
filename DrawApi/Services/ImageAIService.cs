@@ -1,4 +1,5 @@
 ﻿
+using DrawApi.Exceptions;
 using DrawWithAI.DrawApi.Models;
 using DrawWithAI.DrawApi.Services;
 
@@ -24,10 +25,8 @@ namespace DrawWithAI.DrawApi.Services
                 Prompt = prompt
             };
 
-            // Send Request to AI
-            AIResponse aiResponse = await _httpClient.PostAsJsonAsync(AI_URI, aiRequest)
-                .Result.Content.ReadFromJsonAsync<AIResponse>();
-            
+            // Send Request to AI and receive AiResponse
+            AIResponse aiResponse = await _httpClient.PostAsJsonAsync(AI_URI, aiRequest).Result.Content.ReadFromJsonAsync<AIResponse>();
             // Extract namePath from Response
             if (aiResponse != null && !string.IsNullOrEmpty(aiResponse.NamePath))
             {
@@ -35,7 +34,7 @@ namespace DrawWithAI.DrawApi.Services
                 return aiResponse.NamePath;
             }
 
-            throw new Exception("Failed to get a valid response from AI service.");
+            throw new AIServiceException("Failed to get a valid response from AI service.");
         }
     }
 }
