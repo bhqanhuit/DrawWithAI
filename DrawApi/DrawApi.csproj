@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis" Version="1.68.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.68.0" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.68.0.3544" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <Content Include="..\Images\**\*">
 	    <Link>Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
