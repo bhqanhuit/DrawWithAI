@@ -3,6 +3,8 @@ using System.IO;
 using System;
 using System.Text;
 using DrawWithAI.DrawApi.Models;
+using DrawWithAI.DrawApi.Services;
+using System.Net;
 
 namespace DrawWithAI.Controllers
 {
@@ -25,13 +27,19 @@ namespace DrawWithAI.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            Console.WriteLine("fjndsflkdsanfldsafdsafdsa");
+            ImageDriveService DriveControl = new ImageDriveService();
+            DriveControl.UploadImage(@"C:\DrawWithAI\Images\COP26.jpeg");
+
+
+            /*
             string relativePath = @"..\Images\";
             string testFilePath = @"..\Images\test.txt";
             if (!Directory.Exists(relativePath))
             {
                 Directory.CreateDirectory(relativePath);
             }
-
+            
             // Check if test.txt exists, and create it if it doesn't
             if (!System.IO.File.Exists(relativePath))
             {
@@ -48,8 +56,10 @@ namespace DrawWithAI.Controllers
                 sw.WriteLine("Hello Worewrewrwrwrewrewrerwerwerwerewrewrewrwerrwrwerwewwrwerwerwerwerwerewrwerld");
             }
 
+            */
+            
             // Read and display the content of test.txt
-            string content = System.IO.File.ReadAllText(testFilePath);
+            string content = System.IO.File.ReadAllText(@"..\Images\test.txt");
             Console.WriteLine("Content of test.txt: " + content);
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
