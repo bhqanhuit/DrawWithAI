@@ -29,8 +29,8 @@ namespace DrawWithAI.Controllers
         {
             Console.WriteLine("fjndsflkdsanfldsafdsafdsa");
             ImageDriveService DriveControl = new ImageDriveService();
-            DriveControl.UploadImage(@"C:\DrawWithAI\Images\COP26.jpeg");
-
+            // DriveControl.UploadImage(@"C:\DrawWithAI\Images\COP26.jpeg");
+            DriveControl.DownloadImage(@"4.png", @"Resources\ImagesOutput");
 
             /*
             string relativePath = @"..\Images\";
@@ -57,7 +57,7 @@ namespace DrawWithAI.Controllers
             }
 
             */
-            
+
             // Read and display the content of test.txt
             string content = System.IO.File.ReadAllText(@"..\Images\test.txt");
             Console.WriteLine("Content of test.txt: " + content);
