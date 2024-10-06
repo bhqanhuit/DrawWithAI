@@ -14,7 +14,7 @@ namespace DrawWithAI.DrawApi.Services
 {
     public class ImageDriveService
     {
-        string CredentialsPath = @"C:\DrawWithAI\DrawApi\Resources\GoogleAuth\client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
+        string CredentialsPath = @"Resources\GoogleAuth\client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
         static string FolderImageInputId = @"1U2_qm_kLVY-wXb70k0fe-0WzB1Ivzkgm";
         static string FolderImageOutputId = @"14--Tk9eNr2n4E43QYeZ7SKajR4aHOXag";
         string[] Scopes = { DriveService.Scope.DriveFile };
@@ -146,10 +146,9 @@ namespace DrawWithAI.DrawApi.Services
 
             var file = request.ResponseBody;
             Console.WriteLine("File ID: " + file.Id);
+            var Name = Path.GetFileName(localImagePath);
 
-
-
-            return localImagePath;
+            return @"ImagesInput/" + Name;
 
             // input imagePath --> upload image to drive --> output namePath
             // create name pattern for image (to avoid overwriting)

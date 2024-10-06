@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\ImagesOutput\" />
+    <Content Remove="..\Images\4.png" />
   </ItemGroup>
 
 </Project>

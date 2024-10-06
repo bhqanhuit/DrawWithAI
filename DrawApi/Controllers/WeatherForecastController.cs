@@ -30,7 +30,7 @@ namespace DrawWithAI.Controllers
             Console.WriteLine("fjndsflkdsanfldsafdsafdsa");
             ImageDriveService DriveControl = new ImageDriveService();
             // DriveControl.UploadImage(@"C:\DrawWithAI\Images\COP26.jpeg");
-            DriveControl.DownloadImage(@"4.png", @"Resources\ImagesOutput");
+            DriveControl.DownloadImage(@"4.png", @"..\Images");
 
             /*
             string relativePath = @"..\Images\";
