@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
+using Google.Apis.Http;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using System;
@@ -12,12 +13,14 @@ using System.Threading.Tasks;
 
 namespace DrawWithAI.DrawApi.Services
 {
+
     public class ImageDriveService
     {
         string CredentialsPath = @"Resources\GoogleAuth\client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
         static string FolderImageInputId = @"1U2_qm_kLVY-wXb70k0fe-0WzB1Ivzkgm";
         static string FolderImageOutputId = @"14--Tk9eNr2n4E43QYeZ7SKajR4aHOXag";
-        string[] Scopes = { DriveService.Scope.DriveFile };
+        static string FolderTemp = @"1LjRz5QIeF6f2D_HQnYqE3WRxyZzyULER";
+        string[] Scopes = { DriveService.Scope.DriveFile, DriveService.Scope.DriveReadonly };
         string TokenPath = @"Resources\GoogleAuth\token.json";
         DriveService service;
         UserCredential credential;
@@ -46,14 +49,17 @@ namespace DrawWithAI.DrawApi.Services
 
         }
 
-        public static string GetFileId(DriveService service, string TargetName)
+
+        public string GetFileId(string TargetName)
         {
 
             // Define the request
+
+            
             FilesResource.ListRequest request = service.Files.List();
             request.PageSize = 1000; // Maximum files per request (can be changed)
             request.Fields = "nextPageToken, files(id, name)"; // Specify to only return file IDs and names
-            request.Q = $"'{FolderImageOutputId}' in parents";
+            request.Q = $"'{FolderImageInputId}' in parents and trashed=false";
 
             // Execute request and iterate through all pages
             do
@@ -73,8 +79,8 @@ namespace DrawWithAI.DrawApi.Services
 
                 request.PageToken = result.NextPageToken; // Set next page token
             } while (!string.IsNullOrEmpty(request.PageToken));
-
-            return "";
+            
+            return "Not Found";
         }
 
         private static void SaveStreamToFile(string filePath, MemoryStream stream)
@@ -89,8 +95,13 @@ namespace DrawWithAI.DrawApi.Services
         {
             string imagePath = Path.Combine(destFolderPath, driveImageName);
             
-            string fileId = GetFileId(service, driveImageName);
+            string fileId = GetFileId(driveImageName);
             Console.WriteLine(fileId);
+
+            if (fileId == "Not Found")
+            {
+                return "File Not Found";
+            }
 
             var request = service.Files.Get(fileId);
             var stream = new MemoryStream();

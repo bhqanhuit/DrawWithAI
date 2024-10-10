@@ -27,10 +27,9 @@ namespace DrawWithAI.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            Console.WriteLine("fjndsflkdsanfldsafdsafdsa");
             ImageDriveService DriveControl = new ImageDriveService();
-            // DriveControl.UploadImage(@"C:\DrawWithAI\Images\COP26.jpeg");
-            DriveControl.DownloadImage(@"4.png", @"..\Images");
+            //DriveControl.UploadImage(@"C:\DrawWithAI\Images\COP26.jpeg");
+            DriveControl.DownloadImage(@"6.png", @"..\Images");
 
             /*
             string relativePath = @"..\Images\";
