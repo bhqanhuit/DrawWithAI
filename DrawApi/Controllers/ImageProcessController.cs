@@ -32,15 +32,22 @@ namespace DrawApi.Controllers
 
             string imagePath = Path.Combine(imageFolder, request.ImagePath); // combine folder path with the filename
             Console.WriteLine(imagePath);
-
             Console.WriteLine("Upload the images to drive...");
-            string driveNamePath = _imageDriveService.UploadImage(imagePath);
+
+            ImageDriveService DriveController = new ImageDriveService();
+            string driveNamePath = DriveController.UploadImage(imagePath);
+
+            Console.WriteLine($"Image uploaded and saved at {driveNamePath}");
+
             if (string.IsNullOrEmpty(driveNamePath)) throw new DriveServiceException("Failed to upload the image to drive.");
             
 
             Console.WriteLine("Get the image from AI...");
             string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, request.Prompt);
             Console.WriteLine("Download the images from drive...");
+
+
+            Console.WriteLine("Results image path: ", resultDriveNamePath, imageFolder);
             string resultImagePath = _imageDriveService.DownloadImage(resultDriveNamePath, imageFolder);
             
             ImageProcessResponse response = new ImageProcessResponse
@@ -49,6 +56,7 @@ namespace DrawApi.Controllers
                 Status = "Success",
                 Message = "Image Processed Successfully"
             };
+
             // Return the processed image
             return Ok(response);
         }

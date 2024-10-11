@@ -16,10 +16,10 @@ namespace DrawWithAI.DrawApi.Services
 
     public class ImageDriveService
     {
+        // init server information
         string CredentialsPath = @"Resources\GoogleAuth\client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
         static string FolderImageInputId = @"1U2_qm_kLVY-wXb70k0fe-0WzB1Ivzkgm";
         static string FolderImageOutputId = @"14--Tk9eNr2n4E43QYeZ7SKajR4aHOXag";
-        static string FolderTemp = @"1LjRz5QIeF6f2D_HQnYqE3WRxyZzyULER";
         string[] Scopes = { DriveService.Scope.DriveFile, DriveService.Scope.DriveReadonly };
         string TokenPath = @"Resources\GoogleAuth\token.json";
         DriveService service;
@@ -49,17 +49,16 @@ namespace DrawWithAI.DrawApi.Services
 
         }
 
+        // public static string TransferToClient(string)
 
         public string GetFileId(string TargetName)
         {
 
             // Define the request
-
-            
             FilesResource.ListRequest request = service.Files.List();
             request.PageSize = 1000; // Maximum files per request (can be changed)
             request.Fields = "nextPageToken, files(id, name)"; // Specify to only return file IDs and names
-            request.Q = $"'{FolderImageInputId}' in parents and trashed=false";
+            request.Q = $"'{FolderImageOutputId}' in parents and trashed=false";
 
             // Execute request and iterate through all pages
             do
@@ -127,7 +126,6 @@ namespace DrawWithAI.DrawApi.Services
             };
 
             request.Download(stream);
-
             Console.Write("Images Downloaded");
 
             return imagePath;

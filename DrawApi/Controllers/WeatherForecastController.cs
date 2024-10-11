@@ -28,8 +28,8 @@ namespace DrawWithAI.Controllers
         public IEnumerable<WeatherForecast> Get()
         {
             ImageDriveService DriveControl = new ImageDriveService();
-            //DriveControl.UploadImage(@"C:\DrawWithAI\Images\COP26.jpeg");
-            DriveControl.DownloadImage(@"6.png", @"..\Images");
+            //DriveControl.UploadImage(@"..\Images\60038_60039.png");
+            // DriveControl.DownloadImage(@"60038_60039.png", @"..\Images");
 
             /*
             string relativePath = @"..\Images\";
