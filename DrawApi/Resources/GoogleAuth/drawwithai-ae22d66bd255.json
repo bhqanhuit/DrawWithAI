@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "drawwithai",
+  "private_key_id": "ae22d66bd25556b6beb7150ee68e8dea6a247e80",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC9R682vMpH1P42\nmOeVjjKFScMMjvtkDdksNSPf+mizFB6xw33tF9ChVafkYKeRWR2bSdtFMnmH3+/9\nC2ZUE7KamZ5Uip9pEZ2zA9DLaVKFUuEnKGHc94R6vtrr3kBMMRSUvPCLUqzCVNuJ\nxwQHBvogAKHfrzl1CfKcKEsCq1Y+400GEn8ich7+ueLSnmR4KtLkVZ91tc7DXeMZ\nZleQI9HK53tuCrSAb6Ed6t7R47erKXZu0K5OFwOrY6i1jqOdYnpNLZTOZCNixcCF\nT9Ll7+nSXsKfS22aF8lUMOMQqrO8femrrBv73a2Jrhu2IEmk0xDCb2mQuflaaPZ0\n+yFba9dpAgMBAAECggEAFLPxx/ar2GIFYTLlx6+rOnV4Mlg0SnwSSDnSv/WbfJTj\ni5WCoUt0zCS6jan9whHhgWH5bA7qiJBXp1GXInSaGTtavEwCRiOBYHp3HLybJE6N\npnMOCzV+hc940go39a17nw4wcEi9cS8HaUE9oUgj1RrEmdsIWZMaOHbWx4a2kv+o\n8RJ/6p9Mm4JwYcls+L5z94s/oyewImFG52UY4+xQR6bsvL/fB6otdSw3hi/TUZ17\nG+Bm54VVHMLsh+Wh4dQkX5BMBU5H1guCA9KuJCXLzUkMaT0VVxiSRgOlkJT+LhXT\nEgkCJIOgexcR2Vr/va7oSZ/26BiLlYjz1ZDWVVOplQKBgQDmkZmFqkl4fspsKKS/\nEIeDBONTcf7GCKWAHYeJmkQel/pSq/dQvM0QpOcJP06/CN3E8xdyTxWT81i15xG9\nY0WUsc8ShFttQB9oznkzhvIWcwzSL7YqWqH6aq7VRuo+8f5t8+EZsEnq+HdxN61t\nSVcUsZOOdNLjJRFFRUr5goAutQKBgQDSKD7DPBl/9plobJvz4NCiHHRaVsEIR9EU\nvUh++vbu2ZCoT1f+T6P9DfxWIAdeaxKWzUPV53ro2GN4fKVH4r10nMheSWqIiTkj\nkf5PWCMIEq0iZaewE7S4r8feul3H2Qq9n1g4jSwjicrXcQRev4Lg16oP1k8BWV3k\nnMbBtgwCZQKBgG5MIovtvT3WMZFyE/WOu7SyhujpNH6ZrkpOVgM+d+3GuCoKN8I4\nv0SCDj+/ODVs0WIhBAtbx6/CDqLeCf92WNfcA3oRNQdbUGs7soEyweZ5XR3DUzqJ\npsj7de1zAiXgb907eGhoi8PK3qCbiOwp1G2C0VqpiiS9G7jugAJCKn2tAoGAXLcW\noWl1UogHvBMWZmyLfsmQ534YoT+V1VGAl0y+/jcL48VFa9PU5EJ0TcbJmXUheVhL\nkiYSioFUuQY8oM8+iCDXIQnAr0Xi6HdzO6wFoH0k1uUEKuE2vLgINJIB57YwT+Hp\nuOFHVNJoo82fgPF6mxlqVJxWtKCplL85zKI1ACUCgYB6859LN9ZgkiPNtxAswUuA\nM0CaAe1o2bGl+4yVKzSIgno7DnwgmVLdEWSwYvf5O+kLs2jpgF2kMNW7VCN5Vf/j\nu9Dci5Kks4t/vVh/4Zc7EeHu+PThJKMpCWxWsPSG9t1N1n2rq4ZBra3lyPLVrQiP\nKZelRTshlLXvEKF796J7oQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "weakanhuploader@drawwithai.iam.gserviceaccount.com",
+  "client_id": "113858433572369423413",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/weakanhuploader%40drawwithai.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
