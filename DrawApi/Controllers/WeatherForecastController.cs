@@ -5,6 +5,8 @@ using System.Text;
 using DrawWithAI.DrawApi.Models;
 using DrawWithAI.DrawApi.Services;
 using System.Net;
+using DrawApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace DrawWithAI.Controllers
 {
@@ -12,63 +14,39 @@ namespace DrawWithAI.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        //private static readonly string[] Summaries = new[]
+        //{
+        //    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        //};
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        //private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        //public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        //{
+        //    _logger = logger;
+        //}
+        
+        private readonly DataContext _context;
+
+        public WeatherForecastController(DataContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IActionResult> Get()
         {
-            Console.WriteLine("fjndsflkdsanfldsafdsafdsa");
-            ImageDriveService DriveControl = new ImageDriveService();
-            DriveControl.UploadImage(@"C:\DrawWithAI\Images\COP26.jpeg");
 
+            var users = await _context.SketchToImageView.ToListAsync();
+            return Ok(users);
 
-            /*
-            string relativePath = @"..\Images\";
-            string testFilePath = @"..\Images\test.txt";
-            if (!Directory.Exists(relativePath))
-            {
-                Directory.CreateDirectory(relativePath);
-            }
-            
-            // Check if test.txt exists, and create it if it doesn't
-            if (!System.IO.File.Exists(relativePath))
-            {
-                System.IO.File.WriteAllText(testFilePath, "This is a test file.");
-                Console.WriteLine("test.txt created.");
-            }
-            else
-            {
-                Console.WriteLine("test.txt already exists.");
-            }
-
-            using (StreamWriter sw = System.IO.File.CreateText(testFilePath))
-            {
-                sw.WriteLine("Hello Worewrewrwrwrewrewrerwerwerwerewrewrewrwerrwrwerwewwrwerwerwerwerwerewrwerld");
-            }
-
-            */
-            
-            // Read and display the content of test.txt
-            string content = System.IO.File.ReadAllText(@"..\Images\test.txt");
-            Console.WriteLine("Content of test.txt: " + content);
-
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-                {
-                    Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    TemperatureC = Random.Shared.Next(-20, 55),
-                    Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-                })
-                .ToArray();
+            //return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            //    {
+            //        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            //        TemperatureC = Random.Shared.Next(-20, 55),
+            //        Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            //    })
+            //    .ToArray();
         }
 
         [HttpPost]
@@ -78,9 +56,7 @@ namespace DrawWithAI.Controllers
 
             AIResponse response = new AIResponse()
             {
-                NamePath = "hello.txt",
-                Status = "Success",
-                Message = "Image Processed Successfully"
+                NamePath = "hello.txt"
             };
             // Return the processed image
             return Ok(response);

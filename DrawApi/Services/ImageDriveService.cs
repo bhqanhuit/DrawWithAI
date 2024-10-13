@@ -13,7 +13,7 @@ namespace DrawWithAI.DrawApi.Services
 {
     public class ImageDriveService
     {
-        string CredentialsPath = @"C:\DrawWithAI\DrawApi\Resources\GoogleAuth\client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
+        string CredentialsPath = @".\Resources\GoogleAuth\client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
         string FolderImageInputId = @"1U2_qm_kLVY-wXb70k0fe-0WzB1Ivzkgm";
         string FolderImageOutputId = @"14--Tk9eNr2n4E43QYeZ7SKajR4aHOXag";
         string[] Scopes = { DriveService.Scope.DriveFile };
