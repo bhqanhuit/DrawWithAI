@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -28,6 +28,13 @@
 	    <Link>Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="..\Images\3.png" />
+    <Content Remove="..\Images\4.png" />
+    <Content Remove="..\Images\COP26.jpeg" />
+    <Content Remove="..\Images\test.png" />
   </ItemGroup>
 
 </Project>
