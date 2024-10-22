@@ -36,7 +36,6 @@ namespace DrawApi.Controllers
 
             ImageDriveService DriveController = new ImageDriveService();
             string driveNamePath = DriveController.UploadImage(imagePath);
-
             Console.WriteLine($"Image uploaded and saved at {driveNamePath}");
 
             if (string.IsNullOrEmpty(driveNamePath)) throw new DriveServiceException("Failed to upload the image to drive.");

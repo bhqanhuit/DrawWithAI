@@ -23,7 +23,7 @@ namespace DrawWithAI.DrawApi.Services
             // Form AI Request
             RequestToAI aiRequest = new RequestToAI()
             {
-                Id = "567",
+                Id = "789",
                 NamePath = namePath,
                 Prompt = prompt
             };
@@ -35,7 +35,7 @@ namespace DrawWithAI.DrawApi.Services
                 // Send Request to AI and receive AiResponse
                 KeyValuePair<string, string>[] keyValuePairs = new[]
                 {
-                new KeyValuePair<string, string>("Id", "567"),
+                new KeyValuePair<string, string>("Id", "789"),
                 new KeyValuePair<string, string>("NamePath", namePath),
                 new KeyValuePair<string, string>("Prompt", prompt)
                 };
