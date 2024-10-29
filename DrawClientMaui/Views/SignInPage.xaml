@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DrawClientMaui.Views.SignInPage"
+             Background="#E6E1F4">
+
+    <VerticalStackLayout Padding="30" Spacing="20">
+        <Label Text="Sign In" 
+               FontSize="32"
+               TextColor="#8E6ECB"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <Image Source="logo.png"
+               WidthRequest="150"
+               HeightRequest="150"
+               HorizontalOptions="Center"
+               Aspect="AspectFit" />
+
+        <Entry Placeholder="Username" 
+               Text="{Binding Username}" 
+               TextColor="#4B3A7F"
+               Margin="0,10" 
+               WidthRequest="500"
+               BackgroundColor="#F4F0FA"/>
+
+        <!-- Password Entry with Eye Icon for Visibility Toggle -->
+        <Grid>
+            <Entry Placeholder="Password" 
+                   Text="{Binding Password}" 
+                   IsPassword="{Binding IsPasswordHidden}" 
+                   TextColor="#4B3A7F"
+                   Margin="0,10" 
+                   WidthRequest="500"
+                   BackgroundColor="#F4F0FA"
+                   HorizontalOptions="FillAndExpand" />
+
+                <!-- Eye Icon Button for Show/Hide Password -->
+                <ImageButton Source="{Binding EyeIconSource}" 
+                         Command="{Binding TogglePasswordVisibilityCommand}"  
+                         WidthRequest="5"
+                         HeightRequest="5"
+                         VerticalOptions="Center"
+                         BackgroundColor="Transparent"
+                         Margin="450,0,10,0" />
+        </Grid>
+
+        <Button Text="Sign In" 
+                BackgroundColor="#A084DC"
+                TextColor="White"
+                WidthRequest="500"
+                Command="{Binding SignInCommand}" 
+                HorizontalOptions="FillAndExpand" />
+
+        <Label Text="Don't have an account? Sign up!" 
+               TextColor="#4B3A7F"
+               HorizontalOptions="Center">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding NavigateToSignUpCommand}" />
+            </Label.GestureRecognizers>
+        </Label>
+    </VerticalStackLayout>
+</ContentPage>

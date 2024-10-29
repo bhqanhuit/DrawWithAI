@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DrawClientMaui.Views.SettingsPage"
+             BackgroundColor="#E6E1F4">
+    <!-- navigation bar-->
+    <Grid>
+        <!--Define 2 columns: navigation bar and content-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!--Vertical navigation bar on left side-->
+        <VerticalStackLayout Grid.Column="0" Padding="5" BackgroundColor="#6B4CAE" Spacing="20">
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Start">
+                <Image Source="logo.png"
+                   WidthRequest="30"
+                   HeightRequest="30"
+                   Aspect="AspectFit" />
+                <Label Text="Draw With AI"
+                   FontSize="10"
+                   TextColor="White"
+                   VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Button Text="Home"
+                FontSize="Default"
+                TextColor="White"
+                FontAttributes="Bold"
+                BackgroundColor="Transparent"
+                Command="{Binding NavigateToHomeCommand}"
+                ImageSource="home_icon.png" />
+
+            <Button Text="Sketch"
+                FontSize="Default"
+                TextColor="White"
+                FontAttributes="Bold"
+                BackgroundColor="Transparent"
+                Command="{Binding NavigateToSketchCommand}" />
+
+            <Button Text="Gallery"
+                FontSize="Default"
+                TextColor="White"
+                FontAttributes="Bold"
+                BackgroundColor="Transparent"
+                Command="{Binding NavigateToGalleryCommand}" />
+
+            <Button Text="Settings"
+                FontSize="Default"
+                TextColor="#4B3A7F"
+                BackgroundColor="#A084DC"
+                Command="{Binding NavigateToSettingsCommand}" />
+        </VerticalStackLayout>
+
+        <!--Main content-->
+        <VerticalStackLayout Grid.Column="1" Padding="20">
+            <!--main content-->
+            
+            
+
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
