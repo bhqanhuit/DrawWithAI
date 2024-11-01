@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using DrawApi.Data;
 using DrawApi.Models;
 using DrawApi.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DrawApi.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -28,6 +30,7 @@ namespace DrawApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> UserLogin([FromBody] loginRequest RequestLogIn)
         {
+            Console.WriteLine("testing login");
             var user = await _userService.Authenticate(RequestLogIn.Username, RequestLogIn.Password);
             if (user == null)
             {
@@ -58,7 +61,29 @@ namespace DrawApi.Controllers
 
         }
 
-        
+        [Authorize]
+        [HttpGet("profile")]
+        public IActionResult GetProfile()
+        {
+            // Extract user data from JWT claims
+            var userId = User.FindFirst("UserId")?.Value;
+            var username = User.Identity?.Name;
+            var email = User.FindFirst("Email")?.Value;
+
+            if (userId == null)
+            {
+                return Unauthorized("User not authenticated");
+            }
+
+            return Ok(new
+            {
+                UserId = userId,
+                Username = username,
+                Email = email
+            });
+        }
+
+
 
     }
 }

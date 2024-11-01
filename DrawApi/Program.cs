@@ -26,7 +26,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 // initialize user service
 builder.Services.AddScoped<IUserService, UserService>();
 
+
 // initialize jwt setting
+builder.Services.AddAuthentication();
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
 builder.Services.AddAuthentication(x =>
