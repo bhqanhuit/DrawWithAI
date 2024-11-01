@@ -24,6 +24,11 @@ namespace DrawApi.Services
             _context = context;
         }
 
+        public async Task<User?> GetUserData(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
         public async Task<User?> Authenticate(string username, string password)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
@@ -47,6 +52,8 @@ namespace DrawApi.Services
         {
             return await _context.Users.AnyAsync(u => u.Username == username);
         }
+
+       
 
     }
 

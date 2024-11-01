@@ -23,18 +23,38 @@ namespace DrawApi.Controllers
         }
 
 
+
         // POST api/login/
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] loginRequest RequestLogIn)
+        public async Task<IActionResult> UserLogin([FromBody] loginRequest RequestLogIn)
         {
-            Console.WriteLine(RequestLogIn.Username, RequestLogIn.Password);
-            var user = await _userService.Authenticate("user1", "password1");
+            var user = await _userService.Authenticate(RequestLogIn.Username, RequestLogIn.Password);
             if (user == null)
             {
                 return Unauthorized("Invalid username or password.");
             }
 
             return Ok(user);
+        }
+
+        // PUT api/register
+        [HttpPut("registor")]
+        public async Task<IActionResult> UserRegistor([FromBody] UserRegisterRequest userRegisterRequest)
+        {
+            var newUser = new User
+            {
+                Username = userRegisterRequest.Username,
+                Password = userRegisterRequest.Password,
+                Email = userRegisterRequest.Email,
+            };
+
+            var _user = await _userService.Register(newUser);
+            if (_user == null)
+            {
+                return BadRequest();
+            }
+            return Ok(_user);
+
         }
 
         
