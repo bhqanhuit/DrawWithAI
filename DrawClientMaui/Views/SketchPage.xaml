@@ -2,7 +2,17 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DrawClientMaui.Views.SketchPage" 
+             xmlns:viewModels="clr-namespace:DrawClientMaui.ViewModels"
+             xmlns:drawables="clr-namespace:DrawClientMaui.Drawables"
              BackgroundColor="#E6E1F4">
+
+    <ContentPage.BindingContext>
+        <viewModels:SketchViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <drawables:GraphicsDrawable x:Key="drawable" />
+    </ContentPage.Resources>
 
     <!-- navigation bar-->
     <Grid>
@@ -54,18 +64,49 @@
                     Command="{Binding NavigateToSettingsCommand}" />
         </VerticalStackLayout>
 
-        <!--Main content-->
-        <VerticalStackLayout Grid.Column="1" Padding="20">
-            <!--main content-->
-            <!--Tools bar-->
+        <!-- Main content
+        <VerticalStackLayout Grid.Column="1" Padding="20">  <GraphicsView Drawable="{Binding GraphicsDrawable}"
+                      x:Name="CanvasView"
+                      StartInteraction="OnCanvasStart"
+                      DragInteraction="OnCanvasDrag"
+                      EndInteraction="OnCanvasEnd"
+                      VerticalOptions="FillAndExpand"
+                      HorizontalOptions="FillAndExpand"/>
             
-            
-            <!--Canvas-->
-            
-            
-            <!--Description text and generate button-->
-            
-            
-        </VerticalStackLayout>
+          <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" />
+
+        <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" />
+        <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" />
+
+        
+      
+        </VerticalStackLayout> -->
+      <Grid Grid.Column="1" Padding="20" BackgroundColor="#D5C5E5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100" /> <!-- For entry and buttons -->
+                <RowDefinition Height="50" /> <!-- For entry and buttons -->
+                <RowDefinition Height="50" /> <!-- For entry and buttons -->
+                <RowDefinition Height="*" /> <!-- For the canvas -->
+            </Grid.RowDefinitions>
+
+            <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" Grid.Row="0" BackgroundColor="#E0E0E0" />
+
+            <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" Grid.Row="1" BackgroundColor="#FFB57AD7" />
+            <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" Grid.Row="2" BackgroundColor="#A3D8E2" Clicked="ClearButtonClicked"/>
+
+            <!-- Canvas for Drawing -->
+            <GraphicsView 
+                Drawable="{Binding GraphicsDrawable}"
+                x:Name="CanvasView"
+                StartInteraction="OnCanvasStart"
+                DragInteraction="OnCanvasDrag"
+                EndInteraction="OnCanvasEnd"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand"
+                Grid.Row="3" 
+                BackgroundColor="#FFFFFF"/> <!-- Set background color for the canvas -->
+        </Grid> 
+             
+
     </Grid>
 </ContentPage>
