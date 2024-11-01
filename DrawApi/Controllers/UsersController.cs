@@ -34,7 +34,8 @@ namespace DrawApi.Controllers
                 return Unauthorized("Invalid username or password.");
             }
 
-            return Ok(user);
+            var token = _userService.GenerateJwtToken(user);
+            return Ok(new { Token = token });
         }
 
         // PUT api/register

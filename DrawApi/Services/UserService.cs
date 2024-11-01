@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using DrawApi.Models;
 using Microsoft.EntityFrameworkCore;
 using DrawApi.Data;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace DrawApi.Services
 {
@@ -13,15 +17,19 @@ namespace DrawApi.Services
         Task<User?> Authenticate(string username, string password);
         Task<User?> Register(User user);
         Task<bool> UserExists(string username);
+
+        string GenerateJwtToken(User user);
     }
 
     public class UserService: IUserService
     {
         private readonly DataContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserService(DataContext context)
+        public UserService(DataContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public async Task<User?> GetUserData(string username)
@@ -53,7 +61,30 @@ namespace DrawApi.Services
             return await _context.Users.AnyAsync(u => u.Username == username);
         }
 
-       
+        public string GenerateJwtToken(User user)
+        {
+            var jwtSettings = _configuration.GetSection("Jwt");
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+            var token = new JwtSecurityToken(
+                issuer: jwtSettings["Issuer"],
+                audience: jwtSettings["Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(double.Parse(jwtSettings["ExpiresInMinutes"])),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+
 
     }
 
