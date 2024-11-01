@@ -89,8 +89,8 @@ namespace DrawClientMaui.ViewModels
             // imageStream.Position = 0; // Reset position for reading
 
             // return imageStream;
-            var width = 800;
-            var height = 800;
+            var width = 1024;
+            var height = 1024;
 
             // Create a BitmapExportContext for cross-platform bitmap handling
             using var context = new Microsoft.Maui.Graphics.Platform.PlatformBitmapExportContext(width, height, 1.0f, 0, 0);
