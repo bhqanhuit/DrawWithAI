@@ -1,30 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.Windows.Input;
-using CommunityToolkit.Mvvm.Input;
-
-using DrawClientMaui.Views;
-using DrawClientMaui.Models;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using DrawClientMaui.Models;
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Graphics;
-using DrawClientMaui.Drawables;
+// using SixLabors.ImageSharp;
+// using SixLabors.ImageSharp.Drawing.Processing;
+// using SixLabors.ImageSharp.Drawing;
+// using SixLabors.ImageSharp.PixelFormats;
+// using SixLabors.ImageSharp.Processing;
+using DrawClientMaui.Views;
+// using Android.Graphics;
+using SkiaSharp;
+using SkiaSharp.Views.Maui.Controls;
+using SkiaSharp.Views.Maui;
+
 namespace DrawClientMaui.ViewModels
 {
-    class SketchViewModel:BindableObject
+    class SketchViewModel : BindableObject
     {
-        private readonly GraphicsDrawable _graphicsDrawable;
         private string _prompt;
-        
+        public SKCanvasView CanvasView {get; set;}
         public string Prompt
         {
             get => _prompt;
@@ -34,31 +34,15 @@ namespace DrawClientMaui.ViewModels
                 OnPropertyChanged(nameof(Prompt));
             }
         }
+        
+        public ICommand SendSketchCommand { get; }
+        public ICommand ClearCanvasCommand { get; }
+        public ObservableCollection<PathModel> Paths { get; } = new ObservableCollection<PathModel>();
         // Navigate between pages
         public ICommand NavigateToHomeCommand { get; }
         public ICommand NavigateToSketchCommand { get; }
         public ICommand NavigateToGalleryCommand { get; }
         public ICommand NavigateToSettingsCommand { get; }
-        public ICommand SendSketchCommand { get; }
-        public ICommand ClearCanvasCommand { get; }
-
-        public GraphicsDrawable GraphicsDrawable => _graphicsDrawable;
-
-        public ObservableCollection<PathModel> Paths => _graphicsDrawable.Paths;
-        public string FilePath { get; private set; }
-
-
-        public SketchViewModel()
-        {
-            // Initialize navigation commands
-            NavigateToHomeCommand = new RelayCommand(OnNavigateToHome);
-            NavigateToSketchCommand = new RelayCommand(OnNavigateToSketch);
-            NavigateToGalleryCommand = new RelayCommand(OnNavigateToGallery);
-            NavigateToSettingsCommand = new RelayCommand(OnNavigateToSettings);
-            _graphicsDrawable = new GraphicsDrawable();
-            SendSketchCommand = new Command(async () => await SendSketchToAPI());
-            ClearCanvasCommand = new Command(ClearCanvas);
-        }
         private async void OnNavigateToHome()
         {
             // Handle navigation to Home
@@ -79,60 +63,97 @@ namespace DrawClientMaui.ViewModels
             // Handle navigation to Gallery page (create GalleryPage.xaml first)
             await Application.Current.MainPage.Navigation.PushAsync(new SettingsPage());
         }
-        private async Task<MemoryStream> ConvertSketchToImageAsync()
+        public SketchViewModel()
         {
-            // var canvas = new Microsoft.Maui.Graphics.Platform.PlatformBitmapExportContext(800, 800, 1.0f, 0, 0);
-            // _graphicsDrawable.Draw(canvas.Canvas, new RectF(0, 0, 800, 800));
-            
-            // var imageStream = new MemoryStream();
-            // await canvas.Image.SaveAsync(imageStream, Microsoft.Maui.Graphics.BitmapFormat.Png);
-            // imageStream.Position = 0; // Reset position for reading
-
-            // return imageStream;
-            var width = 1024;
-            var height = 1024;
-
-            // Create a BitmapExportContext for cross-platform bitmap handling
-            using var context = new Microsoft.Maui.Graphics.Platform.PlatformBitmapExportContext(width, height, 1.0f, 0, 0);
-            var canvas = context.Canvas;
-
-            // Draw the current paths onto the canvas
-            _graphicsDrawable.Draw(canvas, new RectF(0, 0, width, height));
-
-            // Export as PNG to MemoryStream
-            var imageStream = new MemoryStream();
-            await context.Image.SaveAsync(imageStream, ImageFormat.Png);
-            imageStream.Position = 0; // Reset position for reading
-            // Save the image locally
-            var currentDirectory = Directory.GetCurrentDirectory();
-            Console.WriteLine($"Current Directory: {currentDirectory}");
-            // Define a path for saving the image in the user's Documents folder
-            string localFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sketch.png");
-
-            // var localFilePath = Path.Combine(Directory.GetCurrentDirectory(), "sketch.png");
-            try{
-            using (var fileStream = new FileStream(localFilePath, FileMode.Create, FileAccess.Write))
-            {
-                await imageStream.CopyToAsync(fileStream); // Save the stream to the file
-            }
-            Console.WriteLine($"Image saved to: {localFilePath}");
-            }
-
-            catch(Exception ex){
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-
-            return imageStream;
+            // Initialize navigation commands
+            NavigateToHomeCommand = new RelayCommand(OnNavigateToHome);
+            NavigateToSketchCommand = new RelayCommand(OnNavigateToSketch);
+            NavigateToGalleryCommand = new RelayCommand(OnNavigateToGallery);
+            NavigateToSettingsCommand = new RelayCommand(OnNavigateToSettings);
+            SendSketchCommand = new Command(async () => await SendSketchToAPI());
+            ClearCanvasCommand = new Command(ClearCanvas);
         }
-               private async Task SendSketchToAPI()
+
+        // private async Task<MemoryStream> ConvertSketchToImageAsync()
+        // {
+        //     int width = 1024;
+        //     int height = 1024;
+
+        //     // Create a blank image with white background
+        //     using var image = new Image<Rgba32>(width, height);
+        //     image.Mutate(ctx => ctx.Fill(SixLabors.ImageSharp.Color.White));
+
+        //     // Draw each path from Paths collection
+        //     foreach (var path in Paths)
+        //     {
+        //         var points = path.Points;
+        //         if (points.Count < 2) continue; // Skip if no points to draw
+
+        //         var pathPoints = points.ConvertAll(p => new SixLabors.ImageSharp.PointF((float)p.X, (float)p.Y)).ToArray();
+        //         var simplePath = new SixLabors.ImageSharp.Drawing.Path(new LinearLineSegment(pathPoints));
+
+        //         image.Mutate(ctx => ctx.Draw(
+        //             Pens.Solid(SixLabors.ImageSharp.Color.Black, path.Size), // Color and thickness
+        //             simplePath
+        //         ));
+        //     }
+
+        //     // Save image to memory stream
+        //     var imageStream = new MemoryStream();
+        //     await image.SaveAsPngAsync(imageStream);
+        //     imageStream.Position = 0;
+
+            // // Optionally save locally
+            // string localFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sketch.png");
+            // await File.WriteAllBytesAsync(localFilePath, imageStream.ToArray());
+            // Console.WriteLine($"Image saved to: {localFilePath}");
+
+        //     return imageStream;
+        // }
+
+        // private async Task SendSketchToAPI()
+        // {
+        //     var sketchImage = await ConvertSketchToImageAsync();
+        //     var sketchBytes = sketchImage.ToArray();
+
+        //     using var httpClient = new HttpClient();
+        //     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("x-api-key", "your_api_key_here");
+
+        //     var requestContent = new MultipartFormDataContent
+        //     {
+        //         { new ByteArrayContent(sketchBytes), "image", "sketch.png" },
+        //         { new StringContent(Prompt), "prompt" }
+        //     };
+
+        //     var response = await httpClient.PostAsync("https://clipdrop-api.co/sketch-to-image/v1/sketch-to-image", requestContent);
+        //     if (response.IsSuccessStatusCode)
+        //     {
+        //         var imageBytes = await response.Content.ReadAsByteArrayAsync();
+        //         // Handle response image bytes as needed (display, save, etc.)
+        //     }
+        //     else
+        //     {
+        //         var errorContent = await response.Content.ReadAsStringAsync();
+        //         await Application.Current.MainPage.DisplayAlert("Error", $"Failed to generate image. {errorContent}", "OK");
+        //     }
+        // }
+
+        public void ClearCanvas()
         {
-            var sketchImage = await ConvertSketchToImageAsync();
+            Paths.Clear();
+            // var canvasView = Application.Current.MainPage.FindByName<SKCanvasView>("CanvasView");
+            CanvasView?.InvalidateSurface();
+            OnPropertyChanged(nameof(Paths));
+        }
+         private async Task SendSketchToAPI()
+        {
+            // Convert Paths to an image and save as a PNG file
+            using var sketchImage = await ConvertPathsToImage();
             var sketchBytes = sketchImage.ToArray();
 
+            // Set up HttpClient for sending the image to the API
             using var httpClient = new HttpClient();
-            // httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            // Add API key header
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("x-api-key", "bb3f8fe8d1d7af4b0a513496e65ddb351ec65b70fcba2985b1b90d0a8054ed1891bbcb97544261ec3a11f6b9a6a8b1ce");
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("x-api-key", "your_api_key_here");
 
             var requestContent = new MultipartFormDataContent
             {
@@ -144,27 +165,66 @@ namespace DrawClientMaui.ViewModels
             if (response.IsSuccessStatusCode)
             {
                 var imageBytes = await response.Content.ReadAsByteArrayAsync();
-                _graphicsDrawable.GeneratedImage = Microsoft.Maui.Graphics.Platform.PlatformImage.FromStream(new MemoryStream(imageBytes));
-                OnPropertyChanged(nameof(GraphicsDrawable)); // Notify canvas to redraw
-                // Check remaining credits (optional)
-                if (response.Headers.TryGetValues("x-remaining-credits", out var remainingCredits))
-                {
-                    Console.WriteLine($"Remaining Credits: {remainingCredits.FirstOrDefault()}");
-                }
+                // Handle the response image bytes as needed (e.g., save or display).
             }
             else
-            { // Display error message
+            {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 await Application.Current.MainPage.DisplayAlert("Error", $"Failed to generate image. {errorContent}", "OK");
             }
         }
-              public void ClearCanvas()
+
+        private async Task<MemoryStream> ConvertPathsToImage()
         {
-            Paths.Clear();
-            _graphicsDrawable.GeneratedImage = null;
-            OnPropertyChanged(nameof(Paths));
-            OnPropertyChanged(nameof(GraphicsDrawable));
+            // const int canvasWidth = 1024;
+            // const int canvasHeight = 1024;
+            const int strokeWidth = 5;
+            var info = new SKImageInfo((int)CanvasView.CanvasSize.Width, (int)CanvasView.CanvasSize.Height);
+            using var surface = SKSurface.Create(info);
+            // Create a new SkiaSharp surface with the specified dimensions
+            // using var surface = SKSurface.Create(new SKImageInfo(canvasWidth, canvasHeight));
+            var canvas = surface.Canvas;
+
+            // Fill the background with white
+            canvas.Clear(SKColors.White);
+
+            // Draw each path in Paths
+            foreach (var path in Paths)
+            {
+                using var paint = new SKPaint
+                {
+                    Color = SKColors.Black,
+                    StrokeWidth = strokeWidth,
+                    IsStroke = true,
+                    StrokeCap = SKStrokeCap.Round,
+                    StrokeJoin = SKStrokeJoin.Round
+                };
+
+                var skPath = new SKPath();
+                if (path.Points.Count > 1)
+                {
+                    skPath.MoveTo(path.Points[0].X, path.Points[0].Y);
+                    foreach (var point in path.Points)
+                    {
+                        skPath.LineTo(point.X, point.Y);
+                    }
+                    canvas.DrawPath(skPath, paint);
+                }
+            }
+
+            // Convert the drawing to an image and then to a PNG in a MemoryStream
+            using var image = surface.Snapshot();
+            var imageData = image.Encode(SKEncodedImageFormat.Png, 100);
+            var imageStream = new MemoryStream();
             
+            imageData.SaveTo(imageStream);
+            imageStream.Position = 0; // Reset stream position to the beginning
+
+            // // Optionally save locally
+            string localFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sketch.png");
+            await File.WriteAllBytesAsync(localFilePath, imageStream.ToArray());
+            Console.WriteLine($"Image saved to: {localFilePath}");
+            return imageStream;
         }
     }
 }
