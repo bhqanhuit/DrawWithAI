@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DrawClientMaui.Views.SketchPage"
              xmlns:viewModels="clr-namespace:DrawClientMaui.ViewModels"
-             BackgroundColor="#E6E1F4">
+             BackgroundColor="#E6E1F4"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Maui.Controls;assembly=SkiaSharp.Views.Maui.Controls">
 
     <ContentPage.BindingContext>
         <viewModels:SketchViewModel />
@@ -57,7 +58,7 @@
                     Command="{Binding NavigateToSettingsCommand}" />
         </VerticalStackLayout>
 
-        <!-- Main content with Image view and controls -->
+        <!-- Main content with SKCanvasView and controls -->
         <Grid Grid.Column="1" Padding="20" BackgroundColor="#D5C5E5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
@@ -69,10 +70,10 @@
             <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" Grid.Row="0" BackgroundColor="#E0E0E0" />
 
             <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" Grid.Row="1" BackgroundColor="#FFB57AD7" />
-            <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" Grid.Row="2" BackgroundColor="#A3D8E2" Clicked="ClearButtonClicked"/>
+            <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" Grid.Row="2" BackgroundColor="#A3D8E2"/>
 
-            <!-- Image for displaying the sketch -->
-            <Image x:Name="CanvasImage" Grid.Row="3" Aspect="AspectFit" BackgroundColor="White"  />
+            <!-- SKCanvasView for drawing -->
+            <skia:SKCanvasView x:Name="CanvasView" PaintSurface="OnCanvasViewPaintSurface" Grid.Row="3" EnableTouchEvents="True" Touch="OnCanvasViewTouch"  />
         </Grid>
     </Grid>
 </ContentPage>

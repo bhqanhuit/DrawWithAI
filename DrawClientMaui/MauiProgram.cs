@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 // using CommunityToolkit.Maui;
 
 namespace DrawClientMaui
@@ -10,6 +11,7 @@ namespace DrawClientMaui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseSkiaSharp()
                 // .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {

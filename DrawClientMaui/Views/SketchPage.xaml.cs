@@ -1,101 +1,99 @@
 using Microsoft.Maui.Controls;
-using Microsoft.Maui.Graphics;
 using DrawClientMaui.ViewModels;
+using SkiaSharp;
+using SkiaSharp.Views.Maui;
+using SkiaSharp.Views.Maui.Controls;
+using System.Collections.Generic;
 using DrawClientMaui.Models;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing.Processing;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.PixelFormats;
-using System.IO;
-using System.Linq;
 using Point = Microsoft.Maui.Graphics.Point;
-using Color = Microsoft.Maui.Graphics.Color;
-using System;
-using Microsoft.Maui.Controls.Shapes;
-// using Java.Interop;
-using SixLabors.ImageSharp.Drawing;
 
 namespace DrawClientMaui.Views
 {
     public partial class SketchPage : ContentPage
     {
         private readonly SketchViewModel _viewModel;
-        private Image<Rgba32> _sketchImage; // ImageSharp image for drawing
-        private string _tempImagePath;
+        private List<SKPoint> _currentPath;
 
         public SketchPage()
         {
             InitializeComponent();
             _viewModel = BindingContext as SketchViewModel;
-            InitializeSketchImage();
+            _viewModel.CanvasView = CanvasView; // Set the CanvasView in the ViewModel
+            _currentPath = new List<SKPoint>();
         }
 
-        private void InitializeSketchImage()
+        // Handle the SKCanvasView paint event to draw paths
+        private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
-            // Create an initial blank canvas
-            _sketchImage = new Image<Rgba32>(1024, 1024);
-            _sketchImage.Mutate(ctx => ctx.Fill(SixLabors.ImageSharp.Color.White));
-            UpdateImageSource();
-        }
+            var canvas = e.Surface.Canvas;
+            canvas.Clear(SKColors.White);
 
-        private void UpdateImageSource()
-        {
-            using var memoryStream = new MemoryStream();
-            _sketchImage.SaveAsPng(memoryStream);
-            memoryStream.Position = 0;
-            CanvasImage.Source = ImageSource.FromStream(() => memoryStream);
-        }
-
-        private void OnCanvasStart(object sender, TouchEventArgs e)
-        {
-            if (e.Touches.Any())
+            // Draw existing paths
+            using (var paint = new SKPaint
             {
-                var touch = e.Touches[0];
+                Color = SKColors.Black,
+                StrokeWidth = 5,
+                Style = SKPaintStyle.Stroke,
+                StrokeCap = SKStrokeCap.Round
+            })
+            {
+                foreach (var path in _viewModel.Paths)
+                {
+                    using var skPath = new SKPath();
+                    skPath.MoveTo(path.Points[0]);
+                    foreach (var point in path.Points)
+                    {
+                        skPath.LineTo(point);
+                    }
+                    canvas.DrawPath(skPath, paint);
+                }
+                // Draw the current path
+                if (_currentPath != null && _currentPath.Count > 0)
+                {
+                    using var skPath = new SKPath();
+                    skPath.MoveTo(_currentPath[0]);
+                    foreach (var point in _currentPath)
+                    {
+                        skPath.LineTo(point);
+                    }
+                    canvas.DrawPath(skPath, paint);
+                }
+            }
+        }
+
+    //     // Handle  touch events to add points to the current path
+        private void OnCanvasViewTouch(object sender, SKTouchEventArgs e)
+        {
+            if (e.ActionType == SKTouchAction.Pressed)
+            {
+                _currentPath = new List<SKPoint> { e.Location };
+                e.Handled = true;
+                CanvasView.InvalidateSurface();
+            }
+            else if (e.ActionType == SKTouchAction.Moved && e.InContact)
+            {
+                _currentPath.Add(e.Location);
+                e.Handled = true;
+                CanvasView.InvalidateSurface();
+            }
+            else if (e.ActionType == SKTouchAction.Released)
+            {
                 _viewModel.Paths.Add(new PathModel
                 {
-                    Color = SixLabors.ImageSharp.Color.Black,
-                    Size = 5,
-                    Points = new List<SixLabors.ImageSharp.PointF> { new SixLabors.ImageSharp.PointF((float)touch.X, (float)touch.Y) }
+                    Points = _currentPath,
+                    Size = 5
                 });
-                UpdateImageSource();
+                _currentPath = null;
+                e.Handled = true;
+                CanvasView.InvalidateSurface();
             }
         }
 
-        private void OnCanvasDrag(object sender, TouchEventArgs e)
-        {
-            if (_viewModel.Paths.Count > 0 && e.Touches.Any())
-            {
-                // Draw each new point on the image
-                var path = _viewModel.Paths[^1];
-                var touch = e.Touches[0];
-
-                path.Points.Add(new SixLabors.ImageSharp.PointF((float)touch.X, (float)touch.Y));
-
-                // Draw on the ImageSharp image directly
-                _sketchImage.Mutate(ctx =>
-                {
-                var pathBuilder = new SixLabors.ImageSharp.Drawing.PathBuilder();
-                pathBuilder.AddLines(path.Points);
-                var pathPoints = pathBuilder.Build();
-
-
-                    // var shape = pathBuilder.Build("M 0 0");
-                    ctx.Draw(new DrawingOptions(), Brushes.Solid(SixLabors.ImageSharp.Color.Black), path.Size, pathPoints);
-                });
-
-                UpdateImageSource();
-            }
-        }
-
-        private void OnCanvasEnd(object sender, TouchEventArgs e)
-        {
-            // Optionally finalize any drawing or actions here
-        }
-
-        private void ClearButtonClicked(object sender, EventArgs e)
-        {
-            _viewModel.ClearCanvas();
-            InitializeSketchImage();
-        }
+    //     // Clear canvas and paths
+    //     private void ClearButtonClicked(object sender, EventArgs e)
+    //     {
+    //         _viewModel.ClearCanvas();
+    //         CanvasView.InvalidateSurface();
+    //     }
     }
 }

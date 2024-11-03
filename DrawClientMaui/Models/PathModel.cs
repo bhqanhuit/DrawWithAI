@@ -1,14 +1,11 @@
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Drawing;
-using SixLabors.ImageSharp.PixelFormats;
+using SkiaSharp;
 using System.Collections.Generic;
 
 namespace DrawClientMaui.Models
 {
     public class PathModel
     {
-        public SixLabors.ImageSharp.Color Color { get; set; }
+        public List<SKPoint> Points { get; set; } = new List<SKPoint>();
         public float Size { get; set; }
-        public List<SixLabors.ImageSharp.PointF> Points { get; set; } = new();
     }
 }

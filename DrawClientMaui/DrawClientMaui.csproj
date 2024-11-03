@@ -69,6 +69,8 @@
 		<PackageReference Include="Microsoft.Maui.Graphics" Version="8.0.92" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
+		<PackageReference Include="SkiaSharp" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
 	</ItemGroup>
 
 	<ItemGroup>
