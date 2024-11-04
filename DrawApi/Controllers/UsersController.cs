@@ -64,10 +64,11 @@ namespace DrawApi.Controllers
 
         [Authorize]
         [HttpGet("{UserID}")]
-        public IActionResult GetProfile(string UserID)
+        public async Task<IActionResult> GetProfile(string UserID)
         {
+            Console.WriteLine(UserID);
             // Extract user data from JWT claims
-            var UserData = _userService.GetUserData(UserID);
+            var UserData = await _userService.GetUserData(UserID);
 
             if (UserData == null)
             {
