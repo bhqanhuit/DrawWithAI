@@ -16,6 +16,8 @@ namespace DrawApi.Services
     {
         Task<User?> Authenticate(string username, string password);
         Task<User?> Register(User user);
+           
+        Task<User?> GetUserData(string username);
         Task<bool> UserExists(string username);
 
         string GenerateJwtToken(User user);
@@ -41,6 +43,7 @@ namespace DrawApi.Services
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
         }
+
 
         public async Task<User?> Register(User user)
         {
