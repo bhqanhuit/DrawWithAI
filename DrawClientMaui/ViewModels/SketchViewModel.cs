@@ -171,15 +171,18 @@ namespace DrawClientMaui.ViewModels
 
             // Set up HttpClient for sending the image to the API
             using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("x-api-key", "your_api_key_here");
-
+            // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("x-api-key", "your_api_key_here");
+            // httpClient. = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            var fileContent = new ByteArrayContent(sketchBytes);
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
             var requestContent = new MultipartFormDataContent
             {
-                { new ByteArrayContent(sketchBytes), "image", "sketch.png" },
+                { fileContent, "image", "sketch.png" },
                 { new StringContent(Prompt), "prompt" }
             };
 
-            var response = await httpClient.PostAsync("https://clipdrop-api.co/sketch-to-image/v1/sketch-to-image", requestContent);
+            // var response = await httpClient.PostAsync("https://clipdrop-api.co/sketch-to-image/v1/sketch-to-image", requestContent);
+            var response = await httpClient.PostAsync("http://localhost:5160/api/ImageProcess", requestContent);
             if (response.IsSuccessStatusCode)
             {
                 var imageBytes = await response.Content.ReadAsByteArrayAsync();
