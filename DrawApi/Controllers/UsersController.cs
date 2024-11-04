@@ -9,6 +9,7 @@ using DrawApi.Data;
 using DrawApi.Models;
 using DrawApi.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace DrawApi.Controllers
 {
@@ -42,7 +43,7 @@ namespace DrawApi.Controllers
         }
 
         // PUT api/register
-        [HttpPut("registor")]
+        [HttpPut("register")]
         public async Task<IActionResult> UserRegistor([FromBody] UserRegisterRequest userRegisterRequest)
         {
             var newUser = new User
@@ -62,25 +63,18 @@ namespace DrawApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("profile")]
-        public IActionResult GetProfile()
+        [HttpGet("{UserID}")]
+        public IActionResult GetProfile(string UserID)
         {
             // Extract user data from JWT claims
-            var userId = User.FindFirst("UserId")?.Value;
-            var username = User.Identity?.Name;
-            var email = User.FindFirst("Email")?.Value;
+            var UserData = _userService.GetUserData(UserID);
 
-            if (userId == null)
+            if (UserData == null)
             {
-                return Unauthorized("User not authenticated");
+                return NotFound();
             }
 
-            return Ok(new
-            {
-                UserId = userId,
-                Username = username,
-                Email = email
-            });
+            return Ok(UserData);
         }
 
 

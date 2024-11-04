@@ -1,4 +1,7 @@
-﻿namespace DrawClientMaui
+﻿using System.Net.Http.Headers;
+
+
+namespace DrawClientMaui
 {
     public partial class App : Application
     {
@@ -8,5 +11,20 @@
 
             MainPage = new AppShell();
         }
+    }
+
+    public static class ApiService
+    {
+        private static readonly HttpClient _httpClient = new HttpClient
+        {
+            BaseAddress = new Uri("https://yourapi.com") // Replace with your API base URL
+        };
+
+        public static void SetAuthToken(string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        public static HttpClient Client => _httpClient;
     }
 }
