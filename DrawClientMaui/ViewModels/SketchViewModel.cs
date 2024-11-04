@@ -149,7 +149,25 @@ namespace DrawClientMaui.ViewModels
         {
             // Convert Paths to an image and save as a PNG file
             using var sketchImage = await ConvertPathsToImage();
-            var sketchBytes = sketchImage.ToArray();
+            var originalBitmap = SKBitmap.Decode(sketchImage);
+
+            // Resize the image
+            int newWidth = 800; // Desired width
+            int newHeight = 800; // Desired height
+            var resizedBitmap = ResizeImage(originalBitmap, newWidth, newHeight);
+
+            // Convert the resized bitmap to a byte array
+            using var resizedImage = SKImage.FromBitmap(resizedBitmap);
+            var resizedImageData = resizedImage.Encode(SKEncodedImageFormat.Png, 100);
+            var resizedImageStream = new MemoryStream();
+            resizedImageData.SaveTo(resizedImageStream);
+            var sketchBytes = resizedImageStream.ToArray();
+            // var sketchBytes = sketchImage.ToArray();
+
+            // // Optionally save locally
+            string localFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sketch.png");
+            await File.WriteAllBytesAsync(localFilePath, sketchBytes.ToArray());
+            Console.WriteLine($"Image saved to: {localFilePath}");
 
             // Set up HttpClient for sending the image to the API
             using var httpClient = new HttpClient();
@@ -220,11 +238,15 @@ namespace DrawClientMaui.ViewModels
             imageData.SaveTo(imageStream);
             imageStream.Position = 0; // Reset stream position to the beginning
 
-            // // Optionally save locally
-            string localFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sketch.png");
-            await File.WriteAllBytesAsync(localFilePath, imageStream.ToArray());
-            Console.WriteLine($"Image saved to: {localFilePath}");
+           
             return imageStream;
+        }
+        private SKBitmap ResizeImage(SKBitmap original, int width, int height)
+        {
+            var resized = new SKBitmap(width, height);
+            using var canvas = new SKCanvas(resized);
+            canvas.DrawBitmap(original, new SKRect(0, 0, width, height));
+            return resized;
         }
     }
 }
