@@ -12,14 +12,16 @@ namespace DrawClientMaui.Views
     public partial class SketchPage : ContentPage
     {
         private readonly SketchViewModel _viewModel;
-        private List<SKPoint> _currentPath;
+        // private List<SKPoint> _currentPath;
+        private PathModel _currentPath;
 
         public SketchPage()
         {
             InitializeComponent();
             _viewModel = BindingContext as SketchViewModel;
             _viewModel.CanvasView = CanvasView; // Set the CanvasView in the ViewModel
-            _currentPath = new List<SKPoint>();
+            // _currentPath = new List<SKPoint>();
+            _currentPath = new PathModel { Points = new List<SKPoint>(), Size = _viewModel.BrushStrokeWidth };
         }
 
         // Handle the SKCanvasView paint event to draw paths
@@ -29,15 +31,17 @@ namespace DrawClientMaui.Views
             canvas.Clear(SKColors.White);
 
             // Draw existing paths
-            using (var paint = new SKPaint
-            {
-                Color = SKColors.Black,
-                StrokeWidth = 5,
-                Style = SKPaintStyle.Stroke,
-                StrokeCap = SKStrokeCap.Round
-            })
-            {
                 foreach (var path in _viewModel.Paths)
+            {
+                // foreach (var path in _viewModel.Paths)
+                using var paint = new SKPaint
+                {
+                    Color = SKColors.Black,
+                    // StrokeWidth = 5,
+                    StrokeWidth = path.Size,
+                    Style = SKPaintStyle.Stroke,
+                    StrokeCap = SKStrokeCap.Round
+                };
                 {
                     using var skPath = new SKPath();
                     skPath.MoveTo(path.Points[0]);
@@ -47,32 +51,41 @@ namespace DrawClientMaui.Views
                     }
                     canvas.DrawPath(skPath, paint);
                 }
+            }
                 // Draw the current path
-                if (_currentPath != null && _currentPath.Count > 0)
+            if (_currentPath != null && _currentPath.Points.Count > 0)
                 {
+                    using var paint = new SKPaint
+                {
+                    Color = SKColors.Black,
+                    // StrokeWidth = 5,
+                    StrokeWidth = _currentPath.Size,
+                    Style = SKPaintStyle.Stroke,
+                    StrokeCap = SKStrokeCap.Round
+                };
                     using var skPath = new SKPath();
-                    skPath.MoveTo(_currentPath[0]);
-                    foreach (var point in _currentPath)
+                    skPath.MoveTo(_currentPath.Points[0]);
+                    foreach (var point in _currentPath.Points)
                     {
                         skPath.LineTo(point);
                     }
                     canvas.DrawPath(skPath, paint);
                 }
             }
-        }
+        
 
     //     // Handle  touch events to add points to the current path
         private void OnCanvasViewTouch(object sender, SKTouchEventArgs e)
         {
             if (e.ActionType == SKTouchAction.Pressed)
             {
-                _currentPath = new List<SKPoint> { e.Location };
+                _currentPath = new PathModel { Points = new List<SKPoint> { e.Location }, Size = _viewModel.BrushStrokeWidth };
                 e.Handled = true;
                 CanvasView.InvalidateSurface();
             }
             else if (e.ActionType == SKTouchAction.Moved && e.InContact)
             {
-                _currentPath.Add(e.Location);
+                _currentPath.Points.Add(e.Location);
                 e.Handled = true;
                 CanvasView.InvalidateSurface();
             }
@@ -80,8 +93,8 @@ namespace DrawClientMaui.Views
             {
                 _viewModel.Paths.Add(new PathModel
                 {
-                    Points = _currentPath,
-                    Size = 5
+                    Points = _currentPath.Points,
+                    Size = _currentPath.Size
                 });
                 _currentPath = null;
                 e.Handled = true;

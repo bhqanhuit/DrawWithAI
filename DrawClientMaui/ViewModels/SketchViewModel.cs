@@ -34,7 +34,16 @@ namespace DrawClientMaui.ViewModels
                 OnPropertyChanged(nameof(Prompt));
             }
         }
-        
+        private float _brushStrokeWidth = 5;
+        public float BrushStrokeWidth
+        {
+            get => _brushStrokeWidth;
+            set
+            {
+                _brushStrokeWidth = value;
+                OnPropertyChanged();
+            }
+        } 
         public ICommand SendSketchCommand { get; }
         public ICommand ClearCanvasCommand { get; }
         public ObservableCollection<PathModel> Paths { get; } = new ObservableCollection<PathModel>();
@@ -149,20 +158,22 @@ namespace DrawClientMaui.ViewModels
         {
             // Convert Paths to an image and save as a PNG file
             using var sketchImage = await ConvertPathsToImage();
-            var originalBitmap = SKBitmap.Decode(sketchImage);
 
-            // Resize the image
-            int newWidth = 800; // Desired width
-            int newHeight = 800; // Desired height
-            var resizedBitmap = ResizeImage(originalBitmap, newWidth, newHeight);
+            //If resizing, use the following code
+            // var originalBitmap = SKBitmap.Decode(sketchImage);
+            // // Resize the image
+            // int newWidth = 800; // Desired width
+            // int newHeight = 800; // Desired height
+            // var resizedBitmap = ResizeImage(originalBitmap, newWidth, newHeight);
+            // // Convert the resized bitmap to a byte array
+            // using var resizedImage = SKImage.FromBitmap(resizedBitmap);
+            // var resizedImageData = resizedImage.Encode(SKEncodedImageFormat.Png, 100);
+            // var resizedImageStream = new MemoryStream();
+            // resizedImageData.SaveTo(resizedImageStream);
+            // var sketchBytes = resizedImageStream.ToArray();
 
-            // Convert the resized bitmap to a byte array
-            using var resizedImage = SKImage.FromBitmap(resizedBitmap);
-            var resizedImageData = resizedImage.Encode(SKEncodedImageFormat.Png, 100);
-            var resizedImageStream = new MemoryStream();
-            resizedImageData.SaveTo(resizedImageStream);
-            var sketchBytes = resizedImageStream.ToArray();
-            // var sketchBytes = sketchImage.ToArray();
+            // If not resizing, use the following code
+            var sketchBytes = sketchImage.ToArray();
 
             // // Optionally save locally
             string localFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sketch.png");
@@ -215,7 +226,7 @@ namespace DrawClientMaui.ViewModels
                 using var paint = new SKPaint
                 {
                     Color = SKColors.Black,
-                    StrokeWidth = strokeWidth,
+                    StrokeWidth = path.Size,
                     IsStroke = true,
                     StrokeCap = SKStrokeCap.Round,
                     StrokeJoin = SKStrokeJoin.Round

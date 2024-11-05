@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
 
 namespace DrawWithAI.DrawApi.Services
 {
@@ -18,12 +18,14 @@ namespace DrawWithAI.DrawApi.Services
     {
         // init server information
         // string CredentialsPath;
-        
-        string CredentialsPath = @"Resources/GoogleAuth/client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
+        string CredentialsPath = Path.Combine("Resources", "GoogleAuth", "client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json");
+
+        // string CredentialsPath = @"Resources/GoogleAuth/client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
         static string FolderImageInputId = @"1U2_qm_kLVY-wXb70k0fe-0WzB1Ivzkgm";
         static string FolderImageOutputId = @"14--Tk9eNr2n4E43QYeZ7SKajR4aHOXag";
         string[] Scopes = { DriveService.Scope.DriveFile, DriveService.Scope.DriveReadonly };
-        string TokenPath = @"Resources/GoogleAuth/token.json";
+        string TokenPath = Path.Combine("Resources", "GoogleAuth", "token.json");
+
         DriveService service;
         UserCredential credential;
         public ImageDriveService()
