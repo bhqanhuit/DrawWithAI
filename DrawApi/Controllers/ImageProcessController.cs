@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq.Expressions;
 using DrawApi.Exceptions;
+using SkiaSharp;
 using DrawWithAI.DrawApi.Models;
 using DrawWithAI.DrawApi.Services;
+using System.Drawing.Printing;
+using DrawApi.Models;
 
 namespace DrawApi.Controllers
 {
@@ -16,10 +19,10 @@ namespace DrawApi.Controllers
     {
         private readonly ImageAIService _imageAiService = imageAiService;
         private readonly ImageDriveService _imageDriveService = imageDriveService;
-        public readonly string imageFolder = Path.GetFullPath(@"..\Images\");  // turn relative path to absolute path
+        public readonly string imageFolder = Path.GetFullPath(@"../Images/");  // turn relative path to absolute path
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] ImageProcessRequest request)
+        public async Task<IActionResult> Post(IFormFile image, [FromForm] string prompt)
         {
             /*
              * Get the image from the request.ImagePath (on local)
@@ -29,10 +32,25 @@ namespace DrawApi.Controllers
              * Return  the processed image imagePath to Client
              */
             if (!ModelState.IsValid) throw new BadRequestException("The request is not valid!");
-
-            string imagePath = Path.Combine(imageFolder, request.ImagePath); // combine folder path with the filename
-            Console.WriteLine(imagePath);
+            
             Console.WriteLine("Upload the images to drive...");
+
+            // Read the byte array from the request body
+            byte[] imageBytes;
+            using (var memoryStream = new MemoryStream())
+            {
+                await image.CopyToAsync(memoryStream);
+                imageBytes = memoryStream.ToArray();
+            }
+
+            // Save the image locally
+            string imagePath = SaveImageLocally(imageBytes, @"uploaded_image.png");
+            Console.WriteLine("Image saved locally at: ");
+            Console.WriteLine(imagePath);
+
+            // sketch data create
+            
+        
 
             ImageDriveService DriveController = new ImageDriveService();
             string driveNamePath = DriveController.UploadImage(imagePath);
@@ -42,7 +60,7 @@ namespace DrawApi.Controllers
             
 
             Console.WriteLine("Get the image from AI...");
-            string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, request.Prompt);
+            string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, prompt);
             Console.WriteLine("Download the images from drive...");
 
 
@@ -56,8 +74,22 @@ namespace DrawApi.Controllers
                 Message = "Image Processed Successfully"
             };
 
-            // Return the processed image
+             // Return the processed image
             return Ok(response);
+        }
+
+         private string SaveImageLocally(byte[] imageBytes, string fileName)
+        {
+            string filePath = Path.Combine(imageFolder, fileName);
+            Console.WriteLine(filePath);
+
+            using (var image = SKBitmap.Decode(imageBytes))
+            using (var imageStream = new SKFileWStream(filePath))
+            {
+                image.Encode(imageStream, SKEncodedImageFormat.Png, 100);
+            }
+
+            return filePath;
         }
         
     }

@@ -63,17 +63,19 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="100" />
                 <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
                 <RowDefinition Height="50" /> <!-- For entry and buttons -->
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" Grid.Row="0" BackgroundColor="#E0E0E0" />
+            <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" Grid.Row="0" BackgroundColor="#E0E0E0" TextColor="Black" />
 
             <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" Grid.Row="1" BackgroundColor="#FFB57AD7" />
             <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" Grid.Row="2" BackgroundColor="#A3D8E2"/>
-
+             <!-- Brush stroke slider -->
+            <Slider Minimum="1" Maximum="20" Value="{Binding BrushStrokeWidth}" Grid.Row="3" />
             <!-- SKCanvasView for drawing -->
-            <skia:SKCanvasView x:Name="CanvasView" PaintSurface="OnCanvasViewPaintSurface" Grid.Row="3" EnableTouchEvents="True" Touch="OnCanvasViewTouch"  />
+            <skia:SKCanvasView x:Name="CanvasView" PaintSurface="OnCanvasViewPaintSurface" Grid.Row="4" EnableTouchEvents="True" Touch="OnCanvasViewTouch"  />
         </Grid>
     </Grid>
 </ContentPage>

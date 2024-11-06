@@ -5,9 +5,13 @@ namespace DrawWithAI.DrawApi.Models
 {
     public class ImageProcessRequest
     {
+        // [Required]
+        // public required string ImagePath { get; set; }
+        // [Required]
+        // public required string Prompt { get; set; }
         [Required]
-        public required string ImagePath { get; set; }
+        public required ByteArrayContent Image { get; set; }
         [Required]
-        public required string Prompt { get; set; }
+        public required StringContent Prompt { get; set; }
     }
 }

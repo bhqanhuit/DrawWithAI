@@ -19,15 +19,7 @@ namespace DrawWithAI.DrawApi.Services
 
         public async Task<String> GetImageFromAIAsync(string namePath, string prompt)
         {
-            Console.WriteLine("uploading path: ", namePath);
-            // Form AI Request
-            RequestToAI aiRequest = new RequestToAI()
-            {
-                Id = "789",
-                NamePath = namePath,
-                Prompt = prompt
-            };
-            
+            Console.WriteLine("uploading path: ");
             
             AIResponse aiResponse;
             using (MultipartFormDataContent formDataContent = new MultipartFormDataContent())
@@ -35,7 +27,7 @@ namespace DrawWithAI.DrawApi.Services
                 // Send Request to AI and receive AiResponse
                 KeyValuePair<string, string>[] keyValuePairs = new[]
                 {
-                new KeyValuePair<string, string>("Id", "789"),
+                new KeyValuePair<string, string>("Id", "777"),
                 new KeyValuePair<string, string>("NamePath", namePath),
                 new KeyValuePair<string, string>("Prompt", prompt)
                 };

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
 
 namespace DrawWithAI.DrawApi.Services
 {
@@ -17,16 +17,30 @@ namespace DrawWithAI.DrawApi.Services
     public class ImageDriveService
     {
         // init server information
-        string CredentialsPath = @"Resources\GoogleAuth\client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
+        // string CredentialsPath;
+        string CredentialsPath = Path.Combine("Resources", "GoogleAuth", "client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json");
+
+        // string CredentialsPath = @"Resources/GoogleAuth/client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json";
         static string FolderImageInputId = @"1U2_qm_kLVY-wXb70k0fe-0WzB1Ivzkgm";
         static string FolderImageOutputId = @"14--Tk9eNr2n4E43QYeZ7SKajR4aHOXag";
         string[] Scopes = { DriveService.Scope.DriveFile, DriveService.Scope.DriveReadonly };
-        string TokenPath = @"Resources\GoogleAuth\token.json";
+        string TokenPath = Path.Combine("Resources", "GoogleAuth", "token.json");
+
         DriveService service;
         UserCredential credential;
         public ImageDriveService()
         {
+            // #if ANDROID
+            //     // CredentialsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Resources", "GoogleAuth", "client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json");
+            // #elif IOS
+            //     CredentialsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library", "Resources", "GoogleAuth", "client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json");
+            // #elif WINDOWS
+            //     CredentialsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "GoogleAuth", "client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json");
+            // #elif MACCATALYST
+            // CredentialsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "..", "Library", "Resources", "GoogleAuth", "client_secret_161921845702-5lv0eh2t5vl5t6d1jaftu2340ok1idai.apps.googleusercontent.com.json");
+            // #endif
             Console.WriteLine("Drive Controller creating...");
+            Console.WriteLine(CredentialsPath);  
             // Load OAuth credentials
             using (var stream = new FileStream(CredentialsPath, FileMode.Open, FileAccess.Read))
             {
