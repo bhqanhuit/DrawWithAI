@@ -7,6 +7,7 @@ using SkiaSharp;
 using DrawWithAI.DrawApi.Models;
 using DrawWithAI.DrawApi.Services;
 using System.Drawing.Printing;
+using DrawApi.Models;
 
 namespace DrawApi.Controllers
 {
@@ -32,11 +33,6 @@ namespace DrawApi.Controllers
              */
             if (!ModelState.IsValid) throw new BadRequestException("The request is not valid!");
             
-             // string imagePath = Path.Combine(imageFolder, "sketchh.png"); 
-             // combine folder path with the filename
-
-            // string imagePath = Path.Combine(imageFolder, request.ImagePath); // combine folder path with the filename
-            // Console.WriteLine(imagePath);
             Console.WriteLine("Upload the images to drive...");
 
             // Read the byte array from the request body
@@ -48,9 +44,12 @@ namespace DrawApi.Controllers
             }
 
             // Save the image locally
-            string imagePath = SaveImageLocally(imageBytes, "uploaded_image.png");
+            string imagePath = SaveImageLocally(imageBytes, @"uploaded_image.png");
             Console.WriteLine("Image saved locally at: ");
             Console.WriteLine(imagePath);
+
+            // sketch data create
+            
         
 
             ImageDriveService DriveController = new ImageDriveService();
@@ -61,24 +60,22 @@ namespace DrawApi.Controllers
             
 
             Console.WriteLine("Get the image from AI...");
-
-            return Ok();
-            // string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, request.Prompt.ToString());
-            // Console.WriteLine("Download the images from drive...");
+            string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, prompt);
+            Console.WriteLine("Download the images from drive...");
 
 
-            // Console.WriteLine("Results image path: ", resultDriveNamePath, imageFolder);
-            // string resultImagePath = _imageDriveService.DownloadImage(resultDriveNamePath, imageFolder);
+            Console.WriteLine("Results image path: ", resultDriveNamePath, imageFolder);
+            string resultImagePath = _imageDriveService.DownloadImage(resultDriveNamePath, imageFolder);
             
-        //     ImageProcessResponse response = new ImageProcessResponse
-        //     {
-        //         ResultImagePath = resultImagePath,
-        //         Status = "Success",
-        //         Message = "Image Processed Successfully"
-        //     };
+            ImageProcessResponse response = new ImageProcessResponse
+            {
+                ResultImagePath = resultImagePath,
+                Status = "Success",
+                Message = "Image Processed Successfully"
+            };
 
-        //     // Return the processed image
-        //     return Ok(response);
+             // Return the processed image
+            return Ok(response);
         }
 
          private string SaveImageLocally(byte[] imageBytes, string fileName)
