@@ -23,8 +23,9 @@ builder.Services.AddDbContext<DataContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 21))));
 
 
-// initialize user service
+// initialize service
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISketchService, SketchService>();
 
 
 // initialize jwt setting
