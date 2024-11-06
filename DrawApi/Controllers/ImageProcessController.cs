@@ -8,18 +8,33 @@ using DrawWithAI.DrawApi.Models;
 using DrawWithAI.DrawApi.Services;
 using System.Drawing.Printing;
 using DrawApi.Models;
+using DrawApi.Services;
 
 namespace DrawApi.Controllers
 {
     // https://localhost:5001/api/ImageProcess 
     [Route("api/[controller]")]
     [ApiController]
-    public class ImageProcessController(ImageDriveService imageDriveService, ImageAIService imageAiService)
-        : ControllerBase
+    public class ImageProcessController : ControllerBase
     {
-        private readonly ImageAIService _imageAiService = imageAiService;
-        private readonly ImageDriveService _imageDriveService = imageDriveService;
+        private readonly ImageAIService _imageAiService;
+        private readonly ImageDriveService _imageDriveService;
+        private readonly ISketchService _sketchService;
         public readonly string imageFolder = Path.GetFullPath(@"../Images/");  // turn relative path to absolute path
+
+        public ImageProcessController(ImageDriveService imageDriveService, ImageAIService imageAiService, ISketchService sketchService)
+        {
+            _imageDriveService = imageDriveService;
+            _imageAiService = imageAiService;   
+            _sketchService = sketchService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var sketchesId = await _sketchService.GetLatestSketch();
+            return Ok(sketchesId);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Post(IFormFile image, [FromForm] string prompt)
@@ -43,14 +58,21 @@ namespace DrawApi.Controllers
                 imageBytes = memoryStream.ToArray();
             }
 
+
             // Save the image locally
-            string imagePath = SaveImageLocally(imageBytes, @"uploaded_image.png");
+            var current_sketchID = await _sketchService.GetLatestSketch() + 1;
+            string imagePath = SaveImageLocally(imageBytes, "1_" + current_sketchID.ToString() + ".png");
             Console.WriteLine("Image saved locally at: ");
             Console.WriteLine(imagePath);
 
             // sketch data create
-            
-        
+            var newSketch = new Sketch
+            {
+                SketchName = "1_" + current_sketchID.ToString() + ".png",
+                Prompt = prompt,
+                UserId = 1,
+            };
+            var sketch = _sketchService.InsertSketchToDatabase(newSketch);
 
             ImageDriveService DriveController = new ImageDriveService();
             string driveNamePath = DriveController.UploadImage(imagePath);
@@ -73,6 +95,8 @@ namespace DrawApi.Controllers
                 Status = "Success",
                 Message = "Image Processed Successfully"
             };
+
+            Console.WriteLine(response.ResultImagePath);
 
              // Return the processed image
             return Ok(response);
