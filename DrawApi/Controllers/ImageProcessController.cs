@@ -81,25 +81,32 @@ namespace DrawApi.Controllers
             if (string.IsNullOrEmpty(driveNamePath)) throw new DriveServiceException("Failed to upload the image to drive.");
             
 
-            Console.WriteLine("Get the image from AI...");
-            string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, prompt);
-            Console.WriteLine("Download the images from drive...");
+            // Console.WriteLine("Get the image from AI...");
+            // string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, prompt);
+            // Console.WriteLine("Download the images from drive...");
 
 
-            Console.WriteLine("Results image path: ", resultDriveNamePath, imageFolder);
-            string resultImagePath = _imageDriveService.DownloadImage(resultDriveNamePath, imageFolder);
+            // Console.WriteLine("Results image path: ", resultDriveNamePath, imageFolder);
+            // string resultImagePath = _imageDriveService.DownloadImage(resultDriveNamePath, imageFolder);
             
-            ImageProcessResponse response = new ImageProcessResponse
-            {
-                ResultImagePath = resultImagePath,
-                Status = "Success",
-                Message = "Image Processed Successfully"
+            // ImageProcessResponse response = new ImageProcessResponse
+            // {
+            //     ResultImagePath = resultImagePath,
+            //     Status = "Success",
+            //     Message = "Image Processed Successfully"
+            // };
+            // Read the image file into a byte array
+            string resultImagePath = Path.Combine("../Images/777.png");
+            byte[] resultBytes = System.IO.File.ReadAllBytes(resultImagePath);
+            ByteArrayContent byteArrayContent = new ByteArrayContent(resultBytes);
+            ImageToClient response = new ImageToClient{
+                Image = byteArrayContent
             };
 
-            Console.WriteLine(response.ResultImagePath);
+            // Console.WriteLine(response.ResultImageP);
 
              // Return the processed image
-            return Ok(response);
+            return File(resultBytes,"image/png");
         }
 
          private string SaveImageLocally(byte[] imageBytes, string fileName)

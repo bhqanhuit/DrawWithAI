@@ -74,8 +74,13 @@
             <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" Grid.Row="2" BackgroundColor="#A3D8E2"/>
              <!-- Brush stroke slider -->
             <Slider Minimum="1" Maximum="20" Value="{Binding BrushStrokeWidth}" Grid.Row="3" />
-            <!-- SKCanvasView for drawing -->
-            <skia:SKCanvasView x:Name="CanvasView" PaintSurface="OnCanvasViewPaintSurface" Grid.Row="4" EnableTouchEvents="True" Touch="OnCanvasViewTouch"  />
+
+            <Grid Grid.Row="4">
+                 <!-- SKCanvasView for drawing -->
+                <skia:SKCanvasView x:Name="CanvasView" PaintSurface="OnCanvasViewPaintSurface" EnableTouchEvents="True" Touch="OnCanvasViewTouch"  />
+                <!-- Image control to display the result on top of the canvas -->
+                <Image Source="{Binding ResultImage}" BackgroundColor="Transparent" InputTransparent="True"/>
+            </Grid>
         </Grid>
     </Grid>
 </ContentPage>
