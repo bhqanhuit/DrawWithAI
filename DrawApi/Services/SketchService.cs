@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Google.Apis.Drive.v3.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace DrawApi.Services
 {
@@ -16,6 +17,8 @@ namespace DrawApi.Services
     {
         Task<int> GetLatestSketch();
         Task<Sketch?> InsertSketchToDatabase(Sketch sketch);
+        Task<int> GetLastedGeneratedImage();
+        Task<GeneratedImage?> InsertGeneratedImageToDatabase(GeneratedImage generatedImage);
     }
     public class SketchService : ISketchService
     {
@@ -30,8 +33,12 @@ namespace DrawApi.Services
 
         public async Task<int> GetLatestSketch()
         {
-            
             return await _context.Sketches.MaxAsync(u => u.SketchId);
+        }
+
+        public async Task<int> GetLastedGeneratedImage()
+        {   
+            return await _context.GeneratedImages.MaxAsync(u => u.ImageId);
         }
 
         public async Task<Sketch?> InsertSketchToDatabase(Sketch newSketch)
@@ -39,9 +46,17 @@ namespace DrawApi.Services
             newSketch.UploadAt = DateTime.UtcNow;
             _context.Sketches.Add(newSketch);
             await _context.SaveChangesAsync();
-
             return newSketch;
         }
+
+        public async Task<GeneratedImage?> InsertGeneratedImageToDatabase(GeneratedImage generatedImage)
+        {
+            _context.GeneratedImages.Add(generatedImage);
+            await _context.SaveChangesAsync();
+            return generatedImage;
+
+        }
+
 
     }
 }

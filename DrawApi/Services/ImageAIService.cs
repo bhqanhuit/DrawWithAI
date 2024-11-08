@@ -17,7 +17,7 @@ namespace DrawWithAI.DrawApi.Services
             _httpClient = httpClient;
         }
 
-        public async Task<String> GetImageFromAIAsync(string namePath, string prompt)
+        public async Task<String> GetImageFromAIAsync(string namePath, string prompt, string ImageId)
         {
             Console.WriteLine("uploading path: ");
             
@@ -27,7 +27,7 @@ namespace DrawWithAI.DrawApi.Services
                 // Send Request to AI and receive AiResponse
                 KeyValuePair<string, string>[] keyValuePairs = new[]
                 {
-                new KeyValuePair<string, string>("Id", "777"),
+                new KeyValuePair<string, string>("Id", ImageId),
                 new KeyValuePair<string, string>("NamePath", namePath),
                 new KeyValuePair<string, string>("Prompt", prompt)
                 };
