@@ -66,7 +66,7 @@ namespace DrawApi.Controllers
             Console.WriteLine(imagePath);
 
             // sketch data create
-            var imageName = "1_" + current_sketchID.ToString() + ".png";
+            var imageName = "1_" + current_sketchID.ToString();
             Console.WriteLine(imageName);
             var newSketch = new Sketch
             {
@@ -82,17 +82,19 @@ namespace DrawApi.Controllers
 
             if (string.IsNullOrEmpty(driveNamePath)) throw new DriveServiceException("Failed to upload the image to drive.");
 
-            var currentGeneratedId = await _sketchService.GetLastedGeneratedImage() + 1;
-            Console.WriteLine("next generated id");
-            Console.WriteLine(currentGeneratedId);
+            // var currentGeneratedId = await _sketchService.GetLastedGeneratedImage() + 1;
+            // Console.WriteLine("next generated id");
+            // Console.WriteLine(currentGeneratedId);
 
-            /*
+            
             Console.WriteLine("Get the image from AI...");
             string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, prompt, imageName);
             Console.WriteLine("Download the images from drive...");
 
 
             Console.WriteLine("Results image path: ", resultDriveNamePath, imageFolder);
+            Console.WriteLine(resultDriveNamePath);
+            Console.WriteLine(imageFolder);
             string resultImagePath = _imageDriveService.DownloadImage(resultDriveNamePath, imageFolder);
 
             ImageProcessResponse response = new ImageProcessResponse
@@ -101,21 +103,21 @@ namespace DrawApi.Controllers
                 Status = "Success",
                 Message = "Image Processed Successfully"
             };
-            */
+            
 
             // insert generated image to database
             var generatedImage = new GeneratedImage
             {
-                ImageName = imageName,
-                SketchId = currentGeneratedId,
+                ImageName = resultDriveNamePath,
+                SketchId = current_sketchID,
             };
             await _sketchService.InsertGeneratedImageToDatabase(generatedImage);
 
             // Read the image file into a byte array
-            string resultImagePath = Path.Combine(@"../Images/" + imageName);
+            resultImagePath = Path.Combine(@"../Images/" + resultDriveNamePath);
             byte[] resultBytes = System.IO.File.ReadAllBytes(resultImagePath);
             ByteArrayContent byteArrayContent = new ByteArrayContent(resultBytes);
-            ImageToClient response = new ImageToClient{
+            ImageToClient responseClient = new ImageToClient{
                 Image = byteArrayContent
             };
 

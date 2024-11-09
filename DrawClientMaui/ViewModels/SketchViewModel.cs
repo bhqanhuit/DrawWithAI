@@ -191,7 +191,10 @@ namespace DrawClientMaui.ViewModels
             Console.WriteLine($"Image saved to: {localFilePath}");
 
             // Set up HttpClient for sending the image to the API
-            using var httpClient = new HttpClient();
+            using var httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(800)
+            };
             // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("x-api-key", "your_api_key_here");
             // httpClient. = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             var fileContent = new ByteArrayContent(sketchBytes);
