@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DrawClientMaui.Views.GalleryPage"
+             xmlns:models="clr-namespace:DrawClientMaui.Models"
              BackgroundColor="#E6E1F4">
     <!-- navigation bar-->
     <Grid>
@@ -39,18 +40,28 @@
                     BackgroundColor="Transparent"
                     Command="{Binding NavigateToSketchCommand}" />
 
-            <Button Text="Gallery"
-                    FontSize="Default"
-                    TextColor="#4B3A7F"
-                    FontAttributes="Bold"
-                    BackgroundColor="#A084DC"
-                    Command="{Binding NavigateToGalleryCommand}" />
+            <Button Command="{Binding NavigateToGalleryCommand}" 
+                    Style="{StaticResource CurrentNavigationButton}">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="GoogleMaterialFont"
+                                        Glyph="{x:Static models:IconFont.Photo_library}" />
+                    </Button.ImageSource>
+                    <Button.Text>
+                        Library
+                    </Button.Text>
+            </Button>
 
-            <Button Text="Settings"
-                    FontSize="Default"
-                    TextColor="White"
-                    BackgroundColor="Transparent"
-                    Command="{Binding NavigateToSettingsCommand}" />
+            <Button Command="{Binding NavigateToSettingsCommand}"
+                    Style="{StaticResource DefaultNavigationButton}">
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleMaterialFont"
+                    Glyph="{x:Static models:IconFont.Settings}" />
+                </Button.ImageSource>
+                <Button.Text>
+                    Settings
+                </Button.Text>
+            </Button>
+            
         </VerticalStackLayout>
 
         <!--Main content-->

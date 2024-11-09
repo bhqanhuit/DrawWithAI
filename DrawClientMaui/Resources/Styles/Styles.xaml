@@ -2,7 +2,108 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:DrawClientMaui.Models">
+    
+    <!--Title font-->
+    <Style TargetType="Label" x:Key="Title">
+        <Setter Property="FontFamily" Value="HennyPenny"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="60"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+        <!-- Reusable Current Navigation Button Style with Icon and Text -->
+    <Style TargetType="Button" x:Key="CurrentNavigationButton">
+        <Setter Property="BackgroundColor" Value="#A084DC" />
+        <Setter Property="TextColor" Value="#4B3A7F" />
+        <Setter Property="FontSize" Value="Default" />
+        <Setter Property="FontAttributes" Value="Bold" />
+
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+
+        <!-- Image (Icon) in the Button -->
+        <Setter Property="ImageSource">
+            <Setter.Value>
+                <FontImageSource FontFamily="GoogleMaterialFont"
+                                         Glyph="{x:Static models:IconFont.Home_filled}" 
+                                         Color="#4B3A7F" />
+            </Setter.Value>
+        </Setter>
+
+        <!-- Text of the Button -->
+        <Setter Property="Text" Value="Text" />
+    </Style>
+
+
+
+    <!-- Reusable Default Navigation Button Style with Icon and Text -->
+    <Style TargetType="Button" x:Key="DefaultNavigationButton">
+        <Setter Property="BackgroundColor" Value="Transparent" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="FontSize" Value="Default" />
+        <Setter Property="FontAttributes" Value="Bold" />
+
+        <Setter Property="FontFamily" Value="HennyPenny"/>
+        <Setter Property="BorderWidth" Value="0"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="14,10"/>
+        <Setter Property="MinimumHeightRequest" Value="44"/>
+        <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver" />
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+
+        <!-- Image (Icon) in the Button -->
+        <Setter Property="ImageSource">
+            <Setter.Value>
+                <FontImageSource FontFamily="GoogleMaterialFont"
+                                         Glyph="{x:Static models:IconFont.Home_filled}" 
+                                         Color="White" />
+            </Setter.Value>
+        </Setter>
+
+        <!-- Text of the Button -->
+        <Setter Property="Text" Value="Text" />
+    </Style>
+    
+    
+    <!-- Customize google font-->
+    <Style TargetType="Label" x:Key="GoogleFont">
+        <Setter Property="FontFamily" Value="GoogleMaterialFont" />
+        <Setter Property="FontSize" Value="24" />
+    </Style>
 
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
