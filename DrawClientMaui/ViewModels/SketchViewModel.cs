@@ -44,6 +44,16 @@ namespace DrawClientMaui.ViewModels
                 OnPropertyChanged();
             }
         } 
+        private ImageSource _resultImage;
+        public ImageSource ResultImage
+        {
+            get => _resultImage;
+            set
+            {
+                _resultImage = value;
+                OnPropertyChanged(nameof(ResultImage));
+            }
+        }
         public ICommand SendSketchCommand { get; }
         public ICommand ClearCanvasCommand { get; }
         public ObservableCollection<PathModel> Paths { get; } = new ObservableCollection<PathModel>();
@@ -181,7 +191,10 @@ namespace DrawClientMaui.ViewModels
             Console.WriteLine($"Image saved to: {localFilePath}");
 
             // Set up HttpClient for sending the image to the API
-            using var httpClient = new HttpClient();
+            using var httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(800)
+            };
             // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("x-api-key", "your_api_key_here");
             // httpClient. = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
             var fileContent = new ByteArrayContent(sketchBytes);
@@ -197,6 +210,11 @@ namespace DrawClientMaui.ViewModels
             if (response.IsSuccessStatusCode)
             {
                 var imageBytes = await response.Content.ReadAsByteArrayAsync();
+                ResultImage = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                //how to save the resultImage on my local
+                var localResultFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "resultImage.png");
+                await File.WriteAllBytesAsync(localResultFilePath, imageBytes);
+                Console.WriteLine($"Result image saved to: {localResultFilePath}");
                 // Handle the response image bytes as needed (e.g., save or display).
             }
             else

@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Google.Apis.Drive.v3.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace DrawApi.Services
 {
@@ -16,6 +17,10 @@ namespace DrawApi.Services
     {
         Task<int> GetLatestSketch();
         Task<Sketch?> InsertSketchToDatabase(Sketch sketch);
+        Task<int> GetLastedGeneratedImage();
+        Task<GeneratedImage?> InsertGeneratedImageToDatabase(GeneratedImage generatedImage);
+        Task<List<Sketch>> GetAllSketches();
+        Task<List<Sketch>> GetSketchesByUsername(string username);
     }
     public class SketchService : ISketchService
     {
@@ -27,11 +32,18 @@ namespace DrawApi.Services
             _context = context;
             _configuration = configuration;
         }
-
+        public async Task<List<Sketch>> GetAllSketches()
+        {
+            return await _context.Sketches.ToListAsync();
+        }
         public async Task<int> GetLatestSketch()
         {
-            
             return await _context.Sketches.MaxAsync(u => u.SketchId);
+        }
+
+        public async Task<int> GetLastedGeneratedImage()
+        {   
+            return await _context.GeneratedImages.MaxAsync(u => u.ImageId);
         }
 
         public async Task<Sketch?> InsertSketchToDatabase(Sketch newSketch)
@@ -39,9 +51,23 @@ namespace DrawApi.Services
             newSketch.UploadAt = DateTime.UtcNow;
             _context.Sketches.Add(newSketch);
             await _context.SaveChangesAsync();
-
             return newSketch;
         }
 
+        public async Task<GeneratedImage?> InsertGeneratedImageToDatabase(GeneratedImage generatedImage)
+        {
+            _context.GeneratedImages.Add(generatedImage);
+            await _context.SaveChangesAsync();
+            return generatedImage;
+
+        }
+
+        public async Task<List<Sketch>> GetSketchesByUsername(string username)
+        {
+            return await (from sketch in _context.Sketches
+                          join user in _context.Users on sketch.UserId equals user.UserId
+                          where user.Username == username
+                          select sketch).ToListAsync();
+        }
     }
 }

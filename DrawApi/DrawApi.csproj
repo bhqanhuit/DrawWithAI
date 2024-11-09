@@ -34,6 +34,39 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="..\Images\123.png" />
+    <Content Remove="..\Images\1_10.png" />
+    <Content Remove="..\Images\1_11.png" />
+    <Content Remove="..\Images\1_12.png" />
+    <Content Remove="..\Images\1_13.png" />
+    <Content Remove="..\Images\1_14.png" />
+    <Content Remove="..\Images\1_14.png.png" />
+    <Content Remove="..\Images\1_15.png" />
+    <Content Remove="..\Images\1_16.png" />
+    <Content Remove="..\Images\1_17.png" />
+    <Content Remove="..\Images\1_18.png" />
+    <Content Remove="..\Images\1_19.png" />
+    <Content Remove="..\Images\1_20.png" />
+    <Content Remove="..\Images\1_21.png" />
+    <Content Remove="..\Images\1_22.png" />
+    <Content Remove="..\Images\1_23.png" />
+    <Content Remove="..\Images\1_24.png" />
+    <Content Remove="..\Images\1_25.png" />
+    <Content Remove="..\Images\1_26.png" />
+    <Content Remove="..\Images\1_27.png" />
+    <Content Remove="..\Images\1_28.png" />
+    <Content Remove="..\Images\1_29.png" />
+    <Content Remove="..\Images\1_3.png" />
+    <Content Remove="..\Images\1_30.png" />
+    <Content Remove="..\Images\1_31.png" />
+    <Content Remove="..\Images\1_32.png" />
+    <Content Remove="..\Images\1_33.png" />
+    <Content Remove="..\Images\1_4.png" />
+    <Content Remove="..\Images\1_5.png" />
+    <Content Remove="..\Images\1_6.png" />
+    <Content Remove="..\Images\1_7.png" />
+    <Content Remove="..\Images\1_8.png" />
+    <Content Remove="..\Images\1_9.png" />
     <Content Remove="..\Images\3.png" />
     <Content Remove="..\Images\4.png" />
     <Content Remove="..\Images\COP26.jpeg" />

@@ -47,7 +47,6 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -66,6 +65,10 @@
 			<Link>Images\%(RecursiveDir)%(Filename)%(Extension)</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
+		<None Remove="Resources\Images\eye_closed_icon.png" />
+		<None Remove="Resources\Images\eye_open_icon.png" />
+		<None Remove="Resources\Images\home_icon.png" />
+		<None Remove="Resources\Images\logo.png" />
 		<PackageReference Include="Microsoft.Maui.Graphics" Version="8.0.92" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
 		<PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.1.4" />
