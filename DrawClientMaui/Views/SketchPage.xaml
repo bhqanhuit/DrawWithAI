@@ -76,10 +76,14 @@
             <Slider Minimum="1" Maximum="20" Value="{Binding BrushStrokeWidth}" Grid.Row="3" />
 
             <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
                  <!-- SKCanvasView for drawing -->
-                <skia:SKCanvasView x:Name="CanvasView" PaintSurface="OnCanvasViewPaintSurface" EnableTouchEvents="True" Touch="OnCanvasViewTouch"  />
+                <skia:SKCanvasView x:Name="CanvasView" Grid.Column="0" PaintSurface="OnCanvasViewPaintSurface" EnableTouchEvents="True" Touch="OnCanvasViewTouch"  />
                 <!-- Image control to display the result on top of the canvas -->
-                <Image Source="{Binding ResultImage}" BackgroundColor="Transparent" InputTransparent="True"/>
+                <Image Source="{Binding ResultImage}" Grid.Column="1" BackgroundColor="Transparent" InputTransparent="True"/>
             </Grid>
         </Grid>
     </Grid>
