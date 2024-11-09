@@ -61,30 +61,46 @@
         <!-- Main content with SKCanvasView and controls -->
         <Grid Grid.Column="1" Padding="20" BackgroundColor="#D5C5E5">
             <Grid.RowDefinitions>
-                <RowDefinition Height="100" />
+                
                 <RowDefinition Height="50" />
                 <RowDefinition Height="50" />
-                <RowDefinition Height="50" /> <!-- For entry and buttons -->
+                
+                <!-- For entry and buttons -->
                 <RowDefinition Height="*" />
+                <RowDefinition Height="100" />
             </Grid.RowDefinitions>
 
-            <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" Grid.Row="0" BackgroundColor="#E0E0E0" TextColor="Black" />
+            <!-- Grid for Entry and Button in Row 0 -->
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="8*" />
+                    <!-- 80% for Entry -->
+                    <ColumnDefinition Width="2*" />
+                    <!-- 20% for Button -->
+                </Grid.ColumnDefinitions>
 
-            <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" Grid.Row="1" BackgroundColor="#FFB57AD7" />
-            <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" Grid.Row="2" BackgroundColor="#A3D8E2"/>
-             <!-- Brush stroke slider -->
-            <Slider Minimum="1" Maximum="20" Value="{Binding BrushStrokeWidth}" Grid.Row="3" />
+                <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" Grid.Column="0" BackgroundColor="#E0E0E0" TextColor="Black" />
+                <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" Grid.Column="1" BackgroundColor="#FFB57AD7" />
+            </Grid>
 
-            <Grid Grid.Row="4">
+            <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" Grid.Row="0" BackgroundColor="#A3D8E2"/>
+
+            <!-- Brush stroke slider -->
+            <Slider Minimum="1" Maximum="20" Value="{Binding BrushStrokeWidth}" Grid.Row="1" />
+
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                 <!-- SKCanvasView for drawing -->
-                <skia:SKCanvasView x:Name="CanvasView" Grid.Column="0" PaintSurface="OnCanvasViewPaintSurface" EnableTouchEvents="True" Touch="OnCanvasViewTouch"  />
+
+                <!-- SKCanvasView for drawing -->
+                <skia:SKCanvasView x:Name="CanvasView" Grid.Column="0" PaintSurface="OnCanvasViewPaintSurface" EnableTouchEvents="True" Touch="OnCanvasViewTouch" />
+
                 <!-- Image control to display the result on top of the canvas -->
                 <Image Source="{Binding ResultImage}" Grid.Column="1" BackgroundColor="Transparent" InputTransparent="True"/>
             </Grid>
         </Grid>
+
     </Grid>
 </ContentPage>

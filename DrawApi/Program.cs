@@ -32,6 +32,7 @@ builder.Services.AddScoped<ISketchService, SketchService>();
 builder.Services.AddAuthentication();
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

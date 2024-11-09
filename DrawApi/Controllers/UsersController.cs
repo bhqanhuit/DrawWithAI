@@ -10,6 +10,9 @@ using DrawApi.Models;
 using DrawApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Newtonsoft.Json.Linq;
 
 namespace DrawApi.Controllers
 {
@@ -78,7 +81,45 @@ namespace DrawApi.Controllers
             return Ok(UserData);
         }
 
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            // Retrieve the JWT token from the Authorization header
+            var authHeader = Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                return BadRequest("Invalid or missing token.");
+            }
+
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            // Decode the token
+            var handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtToken;
+
+            try
+            {
+                jwtToken = handler.ReadJwtToken(token);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Invalid token format.");
+            }
+
+            // Extract all claims into a dictionary
+            var claims = jwtToken.Claims.ToDictionary(c => c.Type, c => c.Value);
+
+            // Return the full payload as JSON
+            return Ok(new
+            {
+                Header = jwtToken.Header,
+                Payload = claims
+            });
 
 
+        }
+
+
+        }
     }
-}
