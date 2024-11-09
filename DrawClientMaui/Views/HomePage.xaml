@@ -45,11 +45,11 @@
                     BackgroundColor="Transparent"
                     Command="{Binding NavigateToGalleryCommand}" />
 
-            <Button Text="Account"
+            <Button Text="Settings"
                     FontSize="Default"
                     TextColor="White"
                     BackgroundColor="Transparent"
-                    Command="{Binding NavigateToAccountCommand}" />
+                    Command="{Binding NavigateToSettingsCommand}" />
         </VerticalStackLayout>
 
         <!--Main content-->
