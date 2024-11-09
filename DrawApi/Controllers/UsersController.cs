@@ -1,125 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DrawApi.Data;
-using DrawApi.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using DrawApi.Services;
+using DrawApi.Models;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using System.ComponentModel.DataAnnotations;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using Newtonsoft.Json.Linq;
 
 namespace DrawApi.Controllers
 {
-    
-    [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
 
-        public UsersController(IUserService userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
 
-
-
-        // POST api/login/
         [HttpPost("login")]
-        public async Task<IActionResult> UserLogin([FromBody] loginRequest RequestLogIn)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            Console.WriteLine("testing login");
-            var user = await _userService.Authenticate(RequestLogIn.Username, RequestLogIn.Password);
-            if (user == null)
-            {
-                return Unauthorized("Invalid username or password.");
-            }
+            var user = await _userService.AuthenticateAsync(request.Username, request.Password);
+            if (user == null) return Unauthorized("Invalid username or password");
 
             var token = _userService.GenerateJwtToken(user);
             return Ok(new { Token = token });
         }
 
-        // PUT api/register
-        [HttpPut("register")]
-        public async Task<IActionResult> UserRegistor([FromBody] UserRegisterRequest userRegisterRequest)
+   
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var newUser = new User
-            {
-                Username = userRegisterRequest.Username,
-                Password = userRegisterRequest.Password,
-                Email = userRegisterRequest.Email,
-            };
+            var user = new User { Username = request.Username, Email = request.Email };
+            var registeredUser = await _userService.RegisterAsync(user);
 
-            var _user = await _userService.Register(newUser);
-            if (_user == null)
-            {
-                return BadRequest();
-            }
-            return Ok(_user);
+            if (registeredUser == null) return BadRequest("Username already exists");
 
-        }
-
-        [Authorize]
-        [HttpGet("{UserID}")]
-        public async Task<IActionResult> GetProfile(string UserID)
-        {
-            Console.WriteLine(UserID);
-            // Extract user data from JWT claims
-            var UserData = await _userService.GetUserData(UserID);
-
-            if (UserData == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(UserData);
+            var token = _userService.GenerateJwtToken(registeredUser);
+            return Ok(new { Token = token });
         }
 
         [Authorize]
         [HttpGet("me")]
-        public IActionResult GetCurrentUser()
+        public async Task<IActionResult> GetCurrentUser()
         {
-            // Retrieve the JWT token from the Authorization header
-            var authHeader = Request.Headers["Authorization"].ToString();
-            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-            {
-                return BadRequest("Invalid or missing token.");
-            }
+            var username = User.Identity?.Name;
+            if (username == null) return Unauthorized();
 
-            var token = authHeader.Substring("Bearer ".Length).Trim();
+            var user = await _userService.GetUserDataAsync(username);
+            if (user == null) return NotFound();
 
-            // Decode the token
-            var handler = new JwtSecurityTokenHandler();
-            JwtSecurityToken jwtToken;
-
-            try
-            {
-                jwtToken = handler.ReadJwtToken(token);
-            }
-            catch (Exception)
-            {
-                return BadRequest("Invalid token format.");
-            }
-
-            // Extract all claims into a dictionary
-            var claims = jwtToken.Claims.ToDictionary(c => c.Type, c => c.Value);
-
-            // Return the full payload as JSON
-            return Ok(new
-            {
-                Header = jwtToken.Header,
-                Payload = claims
-            });
-
-
-        }
-
-
+            return Ok(user);
         }
     }
+
+    public class LoginRequest
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class RegisterRequest
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string Email { get; set; }
+    }
+}

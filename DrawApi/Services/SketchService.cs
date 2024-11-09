@@ -19,6 +19,8 @@ namespace DrawApi.Services
         Task<Sketch?> InsertSketchToDatabase(Sketch sketch);
         Task<int> GetLastedGeneratedImage();
         Task<GeneratedImage?> InsertGeneratedImageToDatabase(GeneratedImage generatedImage);
+        Task<List<Sketch>> GetAllSketches();
+        Task<List<Sketch>> GetSketchesByUsername(string username);
     }
     public class SketchService : ISketchService
     {
@@ -30,7 +32,10 @@ namespace DrawApi.Services
             _context = context;
             _configuration = configuration;
         }
-
+        public async Task<List<Sketch>> GetAllSketches()
+        {
+            return await _context.Sketches.ToListAsync();
+        }
         public async Task<int> GetLatestSketch()
         {
             return await _context.Sketches.MaxAsync(u => u.SketchId);
@@ -57,6 +62,12 @@ namespace DrawApi.Services
 
         }
 
-
+        public async Task<List<Sketch>> GetSketchesByUsername(string username)
+        {
+            return await (from sketch in _context.Sketches
+                          join user in _context.Users on sketch.UserId equals user.UserId
+                          where user.Username == username
+                          select sketch).ToListAsync();
+        }
     }
 }

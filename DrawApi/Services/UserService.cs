@@ -8,25 +8,27 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Security.Cryptography;
 
 namespace DrawApi.Services
 {
-    
+
     public interface IUserService
     {
-        Task<User?> Authenticate(string username, string password);
-        Task<User?> Register(User user);
-           
-        Task<User?> GetUserData(string username);
-        Task<bool> UserExists(string username);
-
+        Task<User?> AuthenticateAsync(string username, string password);
+        Task<User?> RegisterAsync(User user);
+        Task<User?> GetUserDataAsync(string username);
+        Task<bool> UserExistsAsync(string username);
         string GenerateJwtToken(User user);
+        Task LogoutAsync();
     }
 
-    public class UserService: IUserService
+
+    public class UserService : IUserService
     {
         private readonly DataContext _context;
         private readonly IConfiguration _configuration;
+        private string? _token;
 
         public UserService(DataContext context, IConfiguration configuration)
         {
@@ -34,20 +36,17 @@ namespace DrawApi.Services
             _configuration = configuration;
         }
 
-        public async Task<User?> GetUserData(string username)
+        // Authenticates user by checking username and password directly
+        public async Task<User?> AuthenticateAsync(string username, string password)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
         }
 
-        public async Task<User?> Authenticate(string username, string password)
+        // Registers a new user without password hashing
+        public async Task<User?> RegisterAsync(User user)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
-        }
-
-
-        public async Task<User?> Register(User user)
-        {
-            if (await UserExists(user.Username))
+            if (await UserExistsAsync(user.Username))
             {
                 return null; // Username already exists
             }
@@ -59,11 +58,19 @@ namespace DrawApi.Services
             return user;
         }
 
-        public async Task<bool> UserExists(string username)
+        // Retrieves user data based on the username
+        public async Task<User?> GetUserDataAsync(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        // Checks if a username already exists in the database
+        public async Task<bool> UserExistsAsync(string username)
         {
             return await _context.Users.AnyAsync(u => u.Username == username);
         }
 
+        // Generates a JWT token for the authenticated user
         public string GenerateJwtToken(User user)
         {
             var jwtSettings = _configuration.GetSection("Jwt");
@@ -72,9 +79,10 @@ namespace DrawApi.Services
 
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Name, user.Username)
+            };
 
             var token = new JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],
@@ -87,9 +95,15 @@ namespace DrawApi.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
-
+        // Logs out the user (e.g., clearing token or session)
+        public async Task LogoutAsync()
+        {
+            _token = null;
+            await Task.CompletedTask;
+        }
     }
 
-    
+
+
+
 }

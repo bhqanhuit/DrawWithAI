@@ -62,6 +62,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient<ImageAIService>();
 builder.Services.AddSingleton<ImageDriveService>();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

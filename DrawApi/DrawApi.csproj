@@ -53,7 +53,14 @@
     <Content Remove="..\Images\1_24.png" />
     <Content Remove="..\Images\1_25.png" />
     <Content Remove="..\Images\1_26.png" />
+    <Content Remove="..\Images\1_27.png" />
+    <Content Remove="..\Images\1_28.png" />
+    <Content Remove="..\Images\1_29.png" />
     <Content Remove="..\Images\1_3.png" />
+    <Content Remove="..\Images\1_30.png" />
+    <Content Remove="..\Images\1_31.png" />
+    <Content Remove="..\Images\1_32.png" />
+    <Content Remove="..\Images\1_33.png" />
     <Content Remove="..\Images\1_4.png" />
     <Content Remove="..\Images\1_5.png" />
     <Content Remove="..\Images\1_6.png" />
