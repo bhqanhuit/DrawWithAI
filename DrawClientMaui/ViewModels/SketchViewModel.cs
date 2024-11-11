@@ -24,6 +24,16 @@ namespace DrawClientMaui.ViewModels
     class SketchViewModel : BindableObject
     {
         private string _prompt;
+        private bool _isEraserActive;
+        public bool IsEraserActive
+        {
+            get => _isEraserActive;
+            set
+            {
+                _isEraserActive = value;
+                OnPropertyChanged();
+            }
+        }
         public SKCanvasView CanvasView {get; set;}
         public string Prompt
         {

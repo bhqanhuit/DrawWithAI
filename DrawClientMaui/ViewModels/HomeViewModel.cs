@@ -31,6 +31,7 @@ namespace DrawClientMaui.ViewModels
         {
             // Handle navigation to Home
             await Application.Current.MainPage.Navigation.PushAsync(new HomePage());
+            
         }
 
         private async void OnNavigateToSketch()

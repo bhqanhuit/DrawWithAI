@@ -9,11 +9,22 @@ using CommunityToolkit.Mvvm.Input;
 
 using DrawClientMaui.Views;
 using DrawClientMaui.Models;
+using System.ComponentModel;
 
 namespace DrawClientMaui.ViewModels
 {
-    class SettingsViewModel
+    class SettingsViewModel : INotifyPropertyChanged
     {
+        private UserModel _user;
+        public UserModel User
+        {
+            get => _user;
+            set
+            {
+                _user = value;
+                OnPropertyChanged(nameof(User));
+            }
+        }
         // Navigate between pages
         public ICommand NavigateToHomeCommand { get; }
         public ICommand NavigateToSketchCommand { get; }
@@ -46,6 +57,12 @@ namespace DrawClientMaui.ViewModels
         {
             // Handle navigation to Gallery page (create GalleryPage.xaml first)
             await Application.Current.MainPage.Navigation.PushAsync(new SettingsPage());
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -72,15 +72,29 @@ namespace DrawClientMaui.ViewModels
 
         private async void OnSignIn()
         {
-            //Validate using UserModel
-            if (UserModel.ValidateCredentials(Username, Password))
+             try
             {
-                //Navigate to HomePage upon successful sign-in
-                await Application.Current.MainPage.Navigation.PushAsync(new HomePage());
+                if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", "Please enter both username and password.", "OK");
+                    return;
+                }
+
+                // Validate credentials using UserModel
+                bool isValid = await UserModel.ValidateCredentialsAsync(Username, Password);
+                if (isValid)
+                {
+                    // Navigate to HomePage upon successful sign-in
+                    await Application.Current.MainPage.Navigation.PushAsync(new HomePage());
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", "Invalid username or password.", "OK");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await Application.Current.MainPage.DisplayAlert("Error", "Invalid username or passwword.", "OK");
+                await Application.Current.MainPage.DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
             }
         }
 

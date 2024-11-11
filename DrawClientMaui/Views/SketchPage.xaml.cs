@@ -23,7 +23,23 @@ namespace DrawClientMaui.Views
             // _currentPath = new List<SKPoint>();
             _currentPath = new PathModel { Points = new List<SKPoint>(), Size = _viewModel.BrushStrokeWidth };
         }
-
+        private void EraserButtonClicked(object sender, EventArgs e)
+        {
+            _viewModel.IsEraserActive = !_viewModel.IsEraserActive;
+        }
+        private void OnCanvasViewPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+        {
+            if (e.Status == GestureStatus.Started)
+            {
+                _startScale = _currentScale;
+            }
+            else if (e.Status == GestureStatus.Running)
+            {
+                _currentScale = _startScale * e.Scale;
+                _scale = Math.Max(1f, _currentScale); // Prevent scaling below 1x
+                CanvasView.InvalidateSurface();
+            }
+        }
         // Handle the SKCanvasView paint event to draw paths
         private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {
@@ -36,7 +52,7 @@ namespace DrawClientMaui.Views
                 // foreach (var path in _viewModel.Paths)
                 using var paint = new SKPaint
                 {
-                    Color = SKColors.Black,
+                    Color = path.Color,
                     // StrokeWidth = 5,
                     StrokeWidth = path.Size,
                     Style = SKPaintStyle.Stroke,
@@ -57,7 +73,7 @@ namespace DrawClientMaui.Views
                 {
                     using var paint = new SKPaint
                 {
-                    Color = SKColors.Black,
+                    Color = _currentPath.Color,
                     // StrokeWidth = 5,
                     StrokeWidth = _currentPath.Size,
                     Style = SKPaintStyle.Stroke,
@@ -79,7 +95,11 @@ namespace DrawClientMaui.Views
         {
             if (e.ActionType == SKTouchAction.Pressed)
             {
-                _currentPath = new PathModel { Points = new List<SKPoint> { e.Location }, Size = _viewModel.BrushStrokeWidth };
+                _currentPath = new PathModel { Points = new List<SKPoint> { e.Location },
+                                            //    Size = _viewModel.BrushStrokeWidth
+                                               Size = _viewModel.IsEraserActive ? _viewModel.BrushStrokeWidth * 2 : _viewModel.BrushStrokeWidth,
+                                               Color = _viewModel.IsEraserActive ? SKColors.White : SKColors.Black // Assuming white is the background color
+                                             };
                 e.Handled = true;
                 CanvasView.InvalidateSurface();
             }
@@ -94,7 +114,8 @@ namespace DrawClientMaui.Views
                 _viewModel.Paths.Add(new PathModel
                 {
                     Points = _currentPath.Points,
-                    Size = _currentPath.Size
+                    Size = _currentPath.Size,
+                    Color = _currentPath.Color
                 });
                 _currentPath = null;
                 e.Handled = true;

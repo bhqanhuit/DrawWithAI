@@ -7,5 +7,6 @@ namespace DrawClientMaui.Models
     {
         public List<SKPoint> Points { get; set; } = new List<SKPoint>();
         public float Size { get; set; }
+        public SKColor Color { get; set; }
     }
 }
