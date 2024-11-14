@@ -3,6 +3,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using DrawClientMaui.Views;
 using DrawClientMaui.Models;
+using DrawClientMaui.Services;
 
 namespace DrawClientMaui.ViewModels
 {
@@ -72,7 +73,7 @@ namespace DrawClientMaui.ViewModels
 
         private async void OnSignIn()
         {
-             try
+            try
             {
                 if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password))
                 {
@@ -80,8 +81,9 @@ namespace DrawClientMaui.ViewModels
                     return;
                 }
 
-                // Validate credentials using UserModel
-                bool isValid = await UserModel.ValidateCredentialsAsync(Username, Password);
+                // Validate credentials using UserServices
+                var userService = new UserServices();
+                bool isValid = await userService.ValidateCredentialsAsync(Username, Password);
                 if (isValid)
                 {
                     // Navigate to HomePage upon successful sign-in

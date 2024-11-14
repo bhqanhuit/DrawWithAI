@@ -27,19 +27,19 @@ namespace DrawClientMaui.Views
         {
             _viewModel.IsEraserActive = !_viewModel.IsEraserActive;
         }
-        private void OnCanvasViewPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
-        {
-            if (e.Status == GestureStatus.Started)
-            {
-                _startScale = _currentScale;
-            }
-            else if (e.Status == GestureStatus.Running)
-            {
-                _currentScale = _startScale * e.Scale;
-                _scale = Math.Max(1f, _currentScale); // Prevent scaling below 1x
-                CanvasView.InvalidateSurface();
-            }
-        }
+        // private void OnCanvasViewPinchUpdated(object sender, PinchGestureUpdatedEventArgs e)
+        // {
+        //     if (e.Status == GestureStatus.Started)
+        //     {
+        //         _startScale = _currentScale;
+        //     }
+        //     else if (e.Status == GestureStatus.Running)
+        //     {
+        //         _currentScale = _startScale * e.Scale;
+        //         _scale = Math.Max(1f, _currentScale); // Prevent scaling below 1x
+        //         CanvasView.InvalidateSurface();
+        //     }
+        // }
         // Handle the SKCanvasView paint event to draw paths
         private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs e)
         {

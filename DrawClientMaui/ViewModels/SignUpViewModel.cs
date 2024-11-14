@@ -59,18 +59,18 @@ namespace DrawClientMaui.ViewModels
                 return;
             }
 
-            // Attempt to store credentials using UserModel
-            bool accountCreated = await UserModel.StoreCredentials(Username, Email, Password);
+            // // Attempt to store credentials using UserModel
+            // bool accountCreated = await UserModel.StoreCredentials(Username, Email, Password);
 
-            if (accountCreated)
-            {
-                await Application.Current.MainPage.Navigation.PushAsync(new HomePage());
-            }
+            // if (accountCreated)
+            // {
+            //     await Application.Current.MainPage.Navigation.PushAsync(new HomePage());
+            // }
 
-            else
-            {
-                await Application.Current.MainPage.DisplayAlert("Error", "Username already exists or account creation  failed. Please try again.", "OK");
-            }
+            // else
+            // {
+            //     await Application.Current.MainPage.DisplayAlert("Error", "Username already exists or account creation  failed. Please try again.", "OK");
+            // }
             
         }
 

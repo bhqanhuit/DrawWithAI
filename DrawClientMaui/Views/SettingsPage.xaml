@@ -59,9 +59,6 @@
             <Label Text="User Information" FontSize="24" FontAttributes="Bold" />
             <Label Text="{Binding User.UserName}" FontSize="18" />
             <Label Text="{Binding User.Email}" FontSize="18" />
-            
-            
-
         </VerticalStackLayout>
     </Grid>
 </ContentPage>
