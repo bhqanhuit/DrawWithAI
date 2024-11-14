@@ -2,56 +2,102 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DrawClientMaui.Views.SignUpPage"
-             BackgroundColor="#E6E1F4">
+             BackgroundImageSource="background.png">
 
-    <VerticalStackLayout Padding="30" Spacing="20">
-        <Label Text="Sign Up" 
-               FontSize="32"
-               TextColor="#8E6ECB"
-               FontAttributes="Bold"
-               HorizontalOptions="Center" />
+    <Grid>
+        <!--Define 2 columns-->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-        <Image Source="logo.png"
-               WidthRequest="150"
-               HeightRequest="150"
-               HorizontalOptions="Center"
-               Aspect="AspectFit" />
-        
-        <Entry Placeholder="Username" 
-               Text="{Binding Username}" 
-               TextColor="#4B3A7F"
-               Margin="0,10"
-               WidthRequest="500"
-               BackgroundColor="#F4F0FA"/>
+        <!--Vertical on left side-->
+        <VerticalStackLayout Grid.Column="0" Padding="5" BackgroundColor="Transparent" Spacing="20" Margin="0,0,100,0">
+            <Image Source="logo.png"
+                   WidthRequest="150"
+                   HeightRequest="150"
+                   HorizontalOptions="Center"
+                   Margin="0,50,0,0"/>
 
-        <Entry Placeholder="Email" 
-               Text="{Binding Email}" 
-               TextColor="#4B3A7F"
-               Margin="0,10" 
-               WidthRequest="500"
-               BackgroundColor="#F4F0FA"/>
 
-        <Entry Placeholder="Password" 
-               IsPassword="True" 
-               Text="{Binding Password}" 
-               TextColor="#4B3A7F"
-               Margin="0,10" 
-               WidthRequest="500"
-               BackgroundColor="#F4F0FA"/>
+            <Label Text="Welcome to 
+                   Draw With AI!"
+                   FontSize="50"
+                   FontAttributes="Bold"
+                   TextColor="Purple"
+                   FontFamily="HennyPenny"
+                   HorizontalOptions="Center"
+                   Margin="0,10,-50,0"
+                   />
 
-        <Button Text="Sign Up" 
-                Command="{Binding SignUpCommand}" 
-                BackgroundColor="#A084DC"
-                TextColor="White"
-                WidthRequest="500"
-                HorizontalOptions="FillAndExpand" />
 
-        <Label Text="Already have an account? Sign in!" 
-               HorizontalOptions="Center"
-               TextColor="#4B3A7F">
-            <Label.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding NavigateToSignInCommand}" />
-            </Label.GestureRecognizers>
-        </Label>
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+
+        <!--Main content-->
+        <VerticalStackLayout Grid.Column="1" Padding="50" Margin="0,0,100,0">
+            <Label Text="Sign Up" 
+                   Style="{StaticResource Title}"/>
+
+
+
+            <Entry Placeholder="Username" 
+                   Text="{Binding Username}" 
+                   TextColor="#4B3A7F"
+                   Margin="0,50" 
+                   WidthRequest="350"
+                   BackgroundColor="#F4F0FA"/>
+
+            <Entry Placeholder="Email" 
+                   Text="{Binding Email}" 
+                   TextColor="#4B3A7F"
+                   Margin="0,-30" 
+                   WidthRequest="350"
+                   BackgroundColor="#F4F0FA"/>
+
+            <!-- Password Entry with Eye Icon for Visibility Toggle -->
+            <Grid>
+                <Entry Placeholder="Password" 
+                       Text="{Binding Password}" 
+                       IsPassword="{Binding IsPasswordHidden}" 
+                       TextColor="#4B3A7F"
+                       Margin="0,50" 
+                       WidthRequest="350"
+                       BackgroundColor="#F4F0FA"
+           
+                       HorizontalOptions="FillAndExpand" />
+
+                <!-- Eye Icon Button for Show/Hide Password -->
+                <ImageButton Source="{Binding EyeIconSource}" 
+                 Command="{Binding TogglePasswordVisibilityCommand}"  
+                 WidthRequest="10"
+                 HeightRequest="10"
+                 Padding="10"
+                 VerticalOptions="Center"
+                 BackgroundColor="Transparent"
+                 Margin="200,0,-100,0" />
+            </Grid>
+
+            <Button Text="Sign Up" 
+                    BackgroundColor="MediumPurple"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontFamily="Roboto"
+                    WidthRequest="350"
+                    Margin="0,-20"
+                    Command="{Binding SignInCommand}" 
+                    HorizontalOptions="FillAndExpand" />
+
+            <Label Text="Already have an account? Sign In." 
+                   TextColor="White"
+                   FontFamily="Roboto"
+                   HorizontalOptions="Center"
+                   Margin="0,30">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NavigateToSignUpCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+        </VerticalStackLayout>
+    </Grid>
+
+
 </ContentPage>

@@ -17,6 +17,9 @@ namespace DrawClientMaui
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("MaterialIcons-Regular.ttf", "GoogleMaterialFont");
+                    fonts.AddFont("HennyPenny-Regular.ttf", "HennyPenny");
+                    fonts.AddFont("Roboto-Regular.ttf", "Roboto");
                 });
 
 #if DEBUG

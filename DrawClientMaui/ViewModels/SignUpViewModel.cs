@@ -10,6 +10,8 @@ namespace DrawClientMaui.ViewModels
         private string _username;
         private string _email;
         private string _password;
+        private bool _isPasswordHidden = true;
+        private string _eyeIconSource = "eye_closed_icon.png";
 
         public string Username
         {
@@ -43,11 +45,39 @@ namespace DrawClientMaui.ViewModels
         //---
         public ICommand SignUpCommand { get; }
         public ICommand NavigateToSignInCommand { get; }
+        public ICommand TogglePasswordVisibilityCommand { get; }
 
         public SignUpPageViewModel()
         {
             SignUpCommand = new RelayCommand(OnSignUp);
             NavigateToSignInCommand = new RelayCommand(OnNavigateToSignIn);
+            TogglePasswordVisibilityCommand = new Command(TogglePasswordVisibility);
+        }
+
+        public bool IsPasswordHidden
+        {
+            get => _isPasswordHidden;
+            set
+            {
+                _isPasswordHidden = value;
+                OnPropertyChanged(nameof(IsPasswordHidden));
+            }
+        }
+
+        public string EyeIconSource
+        {
+            get => _eyeIconSource;
+            set
+            {
+                _eyeIconSource = value;
+                OnPropertyChanged(nameof(EyeIconSource));
+            }
+        }
+
+        private void TogglePasswordVisibility()
+        {
+            IsPasswordHidden = !IsPasswordHidden;
+            EyeIconSource = IsPasswordHidden ? "eye_closed_icon.png" : "eye_open_icon.png";
         }
 
         private async void OnSignUp()
