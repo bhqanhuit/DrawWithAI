@@ -23,6 +23,18 @@ namespace DrawClientMaui.ViewModels
 {
     class SketchViewModel : BindableObject
     {
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsSendSketchEnabled));
+            }
+        }
+        public bool IsSendSketchEnabled => !IsLoading;
         private string _prompt;
         private bool _isEraserActive;
         public bool IsEraserActive
@@ -176,6 +188,7 @@ namespace DrawClientMaui.ViewModels
         }
          private async Task SendSketchToAPI()
         {
+            IsLoading = true;
             // Convert Paths to an image and save as a PNG file
             using var sketchImage = await ConvertPathsToImage();
 
@@ -232,6 +245,7 @@ namespace DrawClientMaui.ViewModels
                 var errorContent = await response.Content.ReadAsStringAsync();
                 await Application.Current.MainPage.DisplayAlert("Error", $"Failed to generate image. {errorContent}", "OK");
             }
+            IsLoading = false;
         }
 
         private async Task<MemoryStream> ConvertPathsToImage()

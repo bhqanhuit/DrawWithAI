@@ -82,8 +82,26 @@
 
                 <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" Grid.Column="0" BackgroundColor="#E0E0E0" TextColor="Black" />
                 <Button Text="Eraser" Clicked="EraserButtonClicked" Grid.Column="2" BackgroundColor="#FFB57AD7" />
-                <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" Grid.Column="1" BackgroundColor="#FFB57AD7" />
-            </Grid>
+                <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" Grid.Column="1" BackgroundColor="#FFB57AD7" IsEnabled="{Binding IsSendSketchEnabled}">
+                    <Button.VisualStateManager.VisualStateGroups>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#FFB57AD7" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="#FFDBA7D7" />
+                                        <Setter Property="TextColor" Value="#B0B0B0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </Button.VisualStateManager.VisualStateGroups>
+                </Button>
+                            </Grid>
 
             <Button Text="Clear Canvas" Command="{Binding ClearCanvasCommand}" Grid.Row="0" BackgroundColor="#A3D8E2"/>
             
@@ -101,6 +119,10 @@
 
                 <!-- Image control to display the result on top of the canvas -->
                 <Image Source="{Binding ResultImage}" Grid.Column="1" BackgroundColor="Transparent" InputTransparent="True"/>
+                <Grid Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center" IsVisible="{Binding IsLoading}">
+                    <BoxView Color="Gray" Opacity="0.5" WidthRequest="100" HeightRequest="100" CornerRadius="50" />
+                    <ActivityIndicator IsRunning="{Binding IsLoading}" Color="White" />
+                </Grid>
             </Grid>
         </Grid>
 
