@@ -47,12 +47,36 @@ namespace DrawApi.Controllers
 
                 // Fetch sketches for the specific user ID
                 var sketches = await _sketchService.GetSketchesByUsername(username);
-                return Ok(sketches);
+
+
+                var sketchResponses = new List<SketchResponse>();
+                foreach (var sketch in sketches)
+                {
+                    var imagePath = Path.Combine(@"../Images/", sketch.SketchName);
+                    if (System.IO.File.Exists(imagePath))
+                    {
+                        var imageBytes = await System.IO.File.ReadAllBytesAsync(imagePath);
+                        sketchResponses.Add(new SketchResponse
+                        {
+                            SketchName = sketch.SketchName,
+                            Prompt = sketch.Prompt,
+                            ImageBytes = imageBytes
+                        });
+                    }
+                }
+
+                return Ok(sketchResponses);
             }
 
             return Unauthorized("Invalid user identity.");
         }
 
 
+    }
+    public class SketchResponse
+    {
+        public string SketchName { get; set; }
+        public string? Prompt { get; set; }
+        public byte[] ImageBytes { get; set; }
     }
 }
