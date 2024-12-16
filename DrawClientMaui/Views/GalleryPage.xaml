@@ -42,13 +42,13 @@
 
             <Button Command="{Binding NavigateToGalleryCommand}" 
                     Style="{StaticResource CurrentNavigationButton}">
-                    <Button.ImageSource>
-                        <FontImageSource FontFamily="GoogleMaterialFont"
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="GoogleMaterialFont"
                                         Glyph="{x:Static models:IconFont.Photo_library}" />
-                    </Button.ImageSource>
-                    <Button.Text>
-                        Library
-                    </Button.Text>
+                </Button.ImageSource>
+                <Button.Text>
+                    Library
+                </Button.Text>
             </Button>
 
             <Button Command="{Binding NavigateToSettingsCommand}"
@@ -61,7 +61,7 @@
                     Settings
                 </Button.Text>
             </Button>
-            
+
         </VerticalStackLayout>
 
         <!--Main content-->
@@ -74,7 +74,6 @@
                     <Frame Padding="10" Margin="10" BorderColor="Gray" CornerRadius="10">
                         <StackLayout>
                             <Image Source="{Binding ImageSource}" Aspect="AspectFit" HeightRequest="200" />
-                            <Label Text="{Binding SketchName}" FontAttributes="Bold" FontSize="Medium" />
                             <Label Text="{Binding Prompt}" FontSize="Small" />
                         </StackLayout>
                     </Frame>
