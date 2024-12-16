@@ -23,6 +23,16 @@ namespace DrawClientMaui.ViewModels
 {
     class SketchViewModel : BindableObject
     {
+        private string _selectedFilePath;
+        public string SelectedFilePath
+        {
+            get => _selectedFilePath;
+            set
+            {
+                _selectedFilePath = value;
+                OnPropertyChanged();
+            }
+        }
         private bool _isLoading;
         public bool IsLoading
         {
@@ -76,6 +86,7 @@ namespace DrawClientMaui.ViewModels
                 OnPropertyChanged(nameof(ResultImage));
             }
         }
+        public ICommand PickSketchCommand { get; }
         public ICommand SendSketchCommand { get; }
         public ICommand ClearCanvasCommand { get; }
         public ObservableCollection<PathModel> Paths { get; } = new ObservableCollection<PathModel>();
@@ -111,6 +122,7 @@ namespace DrawClientMaui.ViewModels
             NavigateToSketchCommand = new RelayCommand(OnNavigateToSketch);
             NavigateToGalleryCommand = new RelayCommand(OnNavigateToGallery);
             NavigateToSettingsCommand = new RelayCommand(OnNavigateToSettings);
+            PickSketchCommand = new Command(async () => await PickSketchFile());
             SendSketchCommand = new Command(async () => await SendSketchToAPI());
             ClearCanvasCommand = new Command(ClearCanvas);
         }
@@ -178,7 +190,51 @@ namespace DrawClientMaui.ViewModels
         //         await Application.Current.MainPage.DisplayAlert("Error", $"Failed to generate image. {errorContent}", "OK");
         //     }
         // }
+        private async Task PickSketchFile()
+        {
+            try
+            {
+                var result = await FilePicker.PickAsync(new PickOptions
+                {
+                    PickerTitle = "Please select a sketch file",
+                    FileTypes = FilePickerFileType.Images
+                });
 
+                if (result != null)
+                {
+                    SelectedFilePath = result.FullPath;
+                    byte[] sketchBytes = await File.ReadAllBytesAsync(SelectedFilePath);
+                    var fileContent = new ByteArrayContent(sketchBytes);
+                    fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
+                    var requestContent = new MultipartFormDataContent
+                    {
+                        { fileContent, "image", "sketch.png" },
+                        { new StringContent(Prompt), "prompt" }
+                    };
+
+                    var response = await ApiService.Client.PostAsync("http://localhost:5160/api/ImageProcess", requestContent);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var imageBytes = await response.Content.ReadAsByteArrayAsync();
+                        ResultImage = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                        var localResultFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "resultImage.png");
+                        await File.WriteAllBytesAsync(localResultFilePath, imageBytes);
+                        Console.WriteLine($"Result image saved to: {localResultFilePath}");
+                    }
+                    else
+                    {
+                        var errorContent = await response.Content.ReadAsStringAsync();
+                        await Application.Current.MainPage.DisplayAlert("Error", $"Failed to generate image. {errorContent}", "OK");
+                    }
+                    IsLoading = false;
+                    Console.WriteLine($"File selected: {SelectedFilePath}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"File picking failed: {ex.Message}");
+            }
+        }
         public void ClearCanvas()
         {
             Paths.Clear();
@@ -229,7 +285,7 @@ namespace DrawClientMaui.ViewModels
             };
 
             // var response = await httpClient.PostAsync("https://clipdrop-api.co/sketch-to-image/v1/sketch-to-image", requestContent);
-            var response = await httpClient.PostAsync("http://localhost:5160/api/ImageProcess", requestContent);
+            var response = await ApiService.Client.PostAsync("http://localhost:5160/api/ImageProcess", requestContent);
             if (response.IsSuccessStatusCode)
             {
                 var imageBytes = await response.Content.ReadAsByteArrayAsync();

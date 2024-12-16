@@ -7,7 +7,7 @@
         <Grid Padding="20" VerticalOptions="Center" HorizontalOptions="Center">
             <Frame BackgroundColor="White" CornerRadius="10" Padding="10">
                 <StackLayout>
-                    <Image Source="{Binding ImageSource}" Aspect="AspectFit" HeightRequest="400" />
+                    <Image Source="{Binding ImageSource}" Aspect="AspectFit" HeightRequest="700" />
                     <Button Text="Close" Command="{Binding CloseCommand}" />
                 </StackLayout>
             </Frame>
