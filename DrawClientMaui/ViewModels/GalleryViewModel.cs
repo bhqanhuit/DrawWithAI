@@ -30,6 +30,7 @@ namespace DrawClientMaui.ViewModels
             NavigateToSketchCommand = new RelayCommand(OnNavigateToSketch);
             NavigateToGalleryCommand = new RelayCommand(OnNavigateToGallery);
             NavigateToSettingsCommand = new RelayCommand(OnNavigateToSettings);
+            // IsPopupVisible = false; // Initialize to false to prevent automatic popup
         }
 
         private async void InitializeAsync()
