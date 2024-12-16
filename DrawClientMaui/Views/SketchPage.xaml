@@ -81,7 +81,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Entry Placeholder="Enter a prompt" Text="{Binding Prompt}" Grid.Column="0" BackgroundColor="#E0E0E0" TextColor="Black" />
-                <Button Text="Eraser" Clicked="EraserButtonClicked" Grid.Column="2" BackgroundColor="#FFB57AD7" />
+                <ImageButton Grid.Column="2" BackgroundColor="#FFC7BACE" Clicked="EraserButtonClicked" Source="eraser.png" Aspect="AspectFit" />
                 <Button Text="Send Sketch" Command="{Binding SendSketchCommand}" Grid.Column="1" BackgroundColor="#FFB57AD7" IsEnabled="{Binding IsSendSketchEnabled}">
                     <Button.VisualStateManager.VisualStateGroups>
                         <VisualStateGroupList>

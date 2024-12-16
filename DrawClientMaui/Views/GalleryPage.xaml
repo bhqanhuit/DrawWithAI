@@ -65,17 +65,21 @@
         </VerticalStackLayout>
 
         <!--Main content-->
-        <VerticalStackLayout Grid.Column="1" Padding="20">
-            <!--main content-->
-            <!--Library-->
-            <Label Text="Library" 
-                   TextColor="#4B3A7F" />
-
-
-            <!--Recent history-->
-            <Label Text="Recent History"
-                   TextColor="#4B3A7F" />
-            
-        </VerticalStackLayout>
+        <CollectionView Grid.Column="1" ItemsSource="{Binding Sketches}">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" Margin="10" BorderColor="Gray" CornerRadius="10">
+                        <StackLayout>
+                            <Image Source="{Binding ImageSource}" Aspect="AspectFit" HeightRequest="200" />
+                            <Label Text="{Binding SketchName}" FontAttributes="Bold" FontSize="Medium" />
+                            <Label Text="{Binding Prompt}" FontSize="Small" />
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </Grid>
 </ContentPage>
