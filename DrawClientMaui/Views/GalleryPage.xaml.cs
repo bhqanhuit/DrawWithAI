@@ -3,9 +3,26 @@ namespace DrawClientMaui.Views;
 
 public partial class GalleryPage : ContentPage
 {
-	public GalleryPage()
+	private readonly GalleryViewModel _galleryViewModel;
+	public GalleryPage() 
 	{
 		InitializeComponent();
-		this.BindingContext = new GalleryViewModel();
+		_galleryViewModel = new GalleryViewModel();
+        BindingContext = _galleryViewModel;
 	}
+	private async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.CurrentSelection.Count > 0)
+            {
+                var selectedSketch = e.CurrentSelection[0] as SketchItem;
+                if (selectedSketch != null)
+                {
+                    var imagePopupPage = new ImagePopupPage
+                    {
+                        ImageSource = selectedSketch.ImageSource
+                    };
+                    await Navigation.PushModalAsync(imagePopupPage);
+                }
+            }
+        }
 }
