@@ -46,7 +46,7 @@ namespace DrawClientMaui.ViewModels
                 OnPropertyChanged();
             }
         }
-        public SKCanvasView CanvasView {get; set;}
+        public SKCanvasView CanvasView { get; set; }
         public string Prompt
         {
             get => _prompt;
@@ -65,7 +65,7 @@ namespace DrawClientMaui.ViewModels
                 _brushStrokeWidth = value;
                 OnPropertyChanged();
             }
-        } 
+        }
         private ImageSource _resultImage;
         public ImageSource ResultImage
         {
@@ -144,10 +144,10 @@ namespace DrawClientMaui.ViewModels
         //     await image.SaveAsPngAsync(imageStream);
         //     imageStream.Position = 0;
 
-            // // Optionally save locally
-            // string localFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sketch.png");
-            // await File.WriteAllBytesAsync(localFilePath, imageStream.ToArray());
-            // Console.WriteLine($"Image saved to: {localFilePath}");
+        // // Optionally save locally
+        // string localFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "sketch.png");
+        // await File.WriteAllBytesAsync(localFilePath, imageStream.ToArray());
+        // Console.WriteLine($"Image saved to: {localFilePath}");
 
         //     return imageStream;
         // }
@@ -186,7 +186,7 @@ namespace DrawClientMaui.ViewModels
             CanvasView?.InvalidateSurface();
             OnPropertyChanged(nameof(Paths));
         }
-         private async Task SendSketchToAPI()
+        private async Task SendSketchToAPI()
         {
             IsLoading = true;
             // Convert Paths to an image and save as a PNG file
@@ -290,11 +290,11 @@ namespace DrawClientMaui.ViewModels
             using var image = surface.Snapshot();
             var imageData = image.Encode(SKEncodedImageFormat.Png, 100);
             var imageStream = new MemoryStream();
-            
+
             imageData.SaveTo(imageStream);
             imageStream.Position = 0; // Reset stream position to the beginning
 
-           
+
             return imageStream;
         }
         private SKBitmap ResizeImage(SKBitmap original, int width, int height)

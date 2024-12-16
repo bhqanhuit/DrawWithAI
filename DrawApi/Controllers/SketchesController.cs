@@ -52,7 +52,7 @@ namespace DrawApi.Controllers
                 var sketchResponses = new List<SketchResponse>();
                 foreach (var sketch in sketches)
                 {
-                    var imagePath = Path.Combine(@"../Images/", sketch.SketchName);
+                    var imagePath = Path.Combine(@"../Images/", sketch.SketchName + ".png");
                     if (System.IO.File.Exists(imagePath))
                     {
                         var imageBytes = await System.IO.File.ReadAllBytesAsync(imagePath);

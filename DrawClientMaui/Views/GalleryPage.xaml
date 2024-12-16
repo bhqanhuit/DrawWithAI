@@ -65,7 +65,6 @@
                     <Frame Padding="10" Margin="10" BorderColor="Gray" CornerRadius="10">
                         <StackLayout>
                             <Image Source="{Binding ImageSource}" Aspect="AspectFit" HeightRequest="200" />
-                            <Label Text="{Binding SketchName}" FontAttributes="Bold" FontSize="Medium" />
                             <Label Text="{Binding Prompt}" FontSize="Small" />
                         </StackLayout>
                     </Frame>

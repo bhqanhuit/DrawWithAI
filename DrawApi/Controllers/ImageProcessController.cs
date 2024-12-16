@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq.Expressions;
-using DrawApi.Exceptions;
-using SkiaSharp;
-using DrawWithAI.DrawApi.Models;
-using DrawWithAI.DrawApi.Services;
-using System.Drawing.Printing;
+﻿using DrawApi.Exceptions;
 using DrawApi.Models;
 using DrawApi.Services;
+using DrawWithAI.DrawApi.Models;
+using DrawWithAI.DrawApi.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SkiaSharp;
+using System.Security.Claims;
+using System.Security.Principal;
 
 namespace DrawApi.Controllers
 {
@@ -20,13 +19,15 @@ namespace DrawApi.Controllers
         private readonly ImageAIService _imageAiService;
         private readonly ImageDriveService _imageDriveService;
         private readonly ISketchService _sketchService;
+        private readonly IUserService _userService;
         public readonly string imageFolder = Path.GetFullPath(@"../Images/");  // turn relative path to absolute path
 
-        public ImageProcessController(ImageDriveService imageDriveService, ImageAIService imageAiService, ISketchService sketchService)
+        public ImageProcessController(ImageDriveService imageDriveService, ImageAIService imageAiService, ISketchService sketchService, IUserService userService)
         {
             _imageDriveService = imageDriveService;
-            _imageAiService = imageAiService;   
+            _imageAiService = imageAiService;
             _sketchService = sketchService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -36,6 +37,7 @@ namespace DrawApi.Controllers
             return Ok(sketchesId);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Post(IFormFile image, [FromForm] string prompt)
         {
@@ -47,7 +49,22 @@ namespace DrawApi.Controllers
              * Return  the processed image imagePath to Client
              */
             if (!ModelState.IsValid) throw new BadRequestException("The request is not valid!");
-            
+            string userId = null;
+            if (User.Identity is ClaimsIdentity identity)
+            {
+                var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null)
+                    return Unauthorized("User ID not found in token.");
+
+                string username = userIdClaim.Value;
+                userId = _userService.GetUserIdByUsername(username).Result;
+                Console.WriteLine(username);
+            }
+            else
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
             Console.WriteLine("Upload the images to drive...");
 
             // Read the byte array from the request body
@@ -61,18 +78,20 @@ namespace DrawApi.Controllers
 
             // Save the image locally
             var current_sketchID = await _sketchService.GetLatestSketch() + 1;
-            string imagePath = SaveImageLocally(imageBytes, "1_" + current_sketchID.ToString() + ".png");
+            string imagePath = SaveImageLocally(imageBytes, userId + "_" + current_sketchID.ToString() + ".png");
             Console.WriteLine("Image saved locally at: ");
             Console.WriteLine(imagePath);
 
             // sketch data create
-            var imageName = "1_" + current_sketchID.ToString();
+
+
+            var imageName = userId + "_" + current_sketchID.ToString();
             Console.WriteLine(imageName);
             var newSketch = new Sketch
             {
                 SketchName = imageName,
                 Prompt = prompt,
-                UserId = 1,
+                UserId = int.Parse(userId),
             };
             var sketch = _sketchService.InsertSketchToDatabase(newSketch);
 
@@ -82,11 +101,6 @@ namespace DrawApi.Controllers
 
             if (string.IsNullOrEmpty(driveNamePath)) throw new DriveServiceException("Failed to upload the image to drive.");
 
-            // var currentGeneratedId = await _sketchService.GetLastedGeneratedImage() + 1;
-            // Console.WriteLine("next generated id");
-            // Console.WriteLine(currentGeneratedId);
-
-            
             Console.WriteLine("Get the image from AI...");
             string resultDriveNamePath = await _imageAiService.GetImageFromAIAsync(driveNamePath, prompt, imageName);
             Console.WriteLine("Download the images from drive...");
@@ -103,7 +117,7 @@ namespace DrawApi.Controllers
                 Status = "Success",
                 Message = "Image Processed Successfully"
             };
-            
+
 
             // insert generated image to database
             var generatedImage = new GeneratedImage
@@ -117,17 +131,18 @@ namespace DrawApi.Controllers
             resultImagePath = Path.Combine(@"../Images/" + resultDriveNamePath);
             byte[] resultBytes = System.IO.File.ReadAllBytes(resultImagePath);
             ByteArrayContent byteArrayContent = new ByteArrayContent(resultBytes);
-            ImageToClient responseClient = new ImageToClient{
+            ImageToClient responseClient = new ImageToClient
+            {
                 Image = byteArrayContent
             };
 
             // Console.WriteLine(response.ResultImageP);
 
-             // Return the processed image
-            return File(resultBytes,"image/png");
+            // Return the processed image
+            return File(resultBytes, "image/png");
         }
 
-         private string SaveImageLocally(byte[] imageBytes, string fileName)
+        private string SaveImageLocally(byte[] imageBytes, string fileName)
         {
             string filePath = Path.Combine(imageFolder, fileName);
             Console.WriteLine(filePath);
@@ -140,7 +155,7 @@ namespace DrawApi.Controllers
 
             return filePath;
         }
-        
+
     }
-    
+
 }

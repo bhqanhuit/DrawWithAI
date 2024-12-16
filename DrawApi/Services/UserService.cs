@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.CodeAnalysis.Elfie.Model.Strings;
 
 namespace DrawApi.Services
 {
@@ -19,6 +20,7 @@ namespace DrawApi.Services
         Task<User?> RegisterAsync(User user);
         Task<User?> GetUserDataAsync(string username);
         Task<bool> UserExistsAsync(string username);
+        Task<string> GetUserIdByUsername(string username);
         string GenerateJwtToken(User user);
         Task LogoutAsync();
     }
@@ -58,10 +60,19 @@ namespace DrawApi.Services
             return user;
         }
 
-        // Retrieves user data based on the username
         public async Task<User?> GetUserDataAsync(string username)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
+        }
+
+        public async Task<string> GetUserIdByUsername(string username)
+        {
+            var userId = await _context.Users
+                               .Where(u => u.Username == username)
+                               .Select(u => u.UserId)
+                               .FirstOrDefaultAsync();
+
+            return userId.ToString();
         }
 
         // Checks if a username already exists in the database
